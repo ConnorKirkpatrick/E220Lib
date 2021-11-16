@@ -227,6 +227,30 @@ bool E220::setBaud(uint8_t newUART, bool permanent){
 }
 uint8_t E220::getBaud(){
     return _baudRate;
+}
+
+bool E220::setParity(uint8_t newParity, bool permanent) {
+    uint8_t finalByte = _baudRate << 5;
+    finalByte = finalByte | (newParity << 3);
+    finalByte = finalByte | _airDataRate;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _parityBit = newParity;
+    return true;
+}
+
+uint8_t E220::getParity() {
+    return _parityBit;
 };
 
 

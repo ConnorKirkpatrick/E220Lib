@@ -148,8 +148,12 @@ class E220 {
 
         bool setAddress(int newAddress, bool permanent);
         uint16_t getAddress();
+
         bool setBaud(uint8_t newUART, bool permanent);
         uint8_t getBaud();
+
+        bool setParity(uint8_t newParity, bool permanent);
+        uint8_t getParity();
 
 
 };
