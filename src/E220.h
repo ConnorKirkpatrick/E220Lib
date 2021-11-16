@@ -155,6 +155,9 @@ class E220 {
         bool setParity(uint8_t newParity, bool permanent);
         uint8_t getParity();
 
+        bool setAirDataRate(uint8_t newAirData, bool permanent);
+        uint8_t getAirDataRate();
+
 
 };
 

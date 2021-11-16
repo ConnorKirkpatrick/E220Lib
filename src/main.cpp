@@ -22,6 +22,8 @@ void setup(){
     radioModule.init();
     Serial.println(radioModule.setAddress(25000, true));
     Serial.println(radioModule.getAddress());
+    Serial.println(radioModule.setAirDataRate(ADR_9600,1));
+    Serial.println(radioModule.getAirDataRate());
     /*
     digitalWrite(m0,HIGH);
     digitalWrite(m1,HIGH);

@@ -176,7 +176,7 @@ uint16_t E220::getAddress() {
 }
 
 /**
- * private command for writing data to the module and verifying the reponse
+ * private command for writing data to the module and verifying the response
  * @param cmdParam the command byte to use
  * @param address The address to start writing
  * @param length The length of parameter data to write
@@ -190,7 +190,7 @@ bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8
     _streamSerial->write(parameters, length);
 
     //validate the output
-    uint8_t output[(uint8_t)sizeof(message)+(uint8_t)sizeof(parameters)];
+    uint8_t output[sizeof(message)+length];
     _streamSerial->readBytes(output, sizeof(output));
     setMode(_setting);
     if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
@@ -251,7 +251,34 @@ bool E220::setParity(uint8_t newParity, bool permanent) {
 
 uint8_t E220::getParity() {
     return _parityBit;
+}
+
+bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
+    uint8_t finalByte = _baudRate << 5;
+    finalByte = finalByte | (_parityBit << 3);
+    finalByte = finalByte | newAirData;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _airDataRate = newAirData;
+    return true;
+}
+
+uint8_t E220::getAirDataRate() {
+    return _airDataRate;
 };
 
+
+///Maybe change the returns to use a swtich to return a textual version of the data rather than the raw binary?
+///EG switch on the air data, return the baud rate as 9600 rather than 010
 
 
