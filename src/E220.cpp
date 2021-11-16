@@ -14,6 +14,13 @@
 #endif
 
 //create our new module object
+/**
+ * Constructor for the E220 module
+ * @param s The data stream, either a software of hardware serial
+ * @param PIN_M0 The digital pin connected to pin M0 on the module
+ * @param PIN_M1 The digital pin connected to pin M1 on the module
+ * @param PIN_AUX The digital pin connected to pin AUX on the module
+ */
 E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
     _streamSerial = s;
     _M0 = PIN_M0;
@@ -23,6 +30,10 @@ E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
 
 
 //Initiate the module connected, basically see if we can read data
+/**
+ * Initializer for the module, used to check we can communicate with the module and read the current parameter
+ * @return boolean representing the initialisation, true for success
+ */
 bool E220::init() {
     //set up the pins
     pinMode(_AUX, INPUT);
@@ -45,7 +56,10 @@ bool E220::init() {
 }
 
 
-
+/**
+ * Set mode, public option to set the operating mode of the module
+ * @param mode The mode to swap to
+ */
 void E220::setMode(uint8_t mode){
     //time for the pins to recover, sheet says 2ms, 10 is safe
     switch (mode) {
@@ -73,6 +87,10 @@ void E220::setMode(uint8_t mode){
     delay(50);
 }
 
+/**
+ * Method reads all the default parameters from the module and updates the global values representing these
+ * @return  boolean represening if the read was successful, true for success
+ */
 bool E220::readBoardData(){
     setMode(MODE_PROGRAM);
     byte configCommand[] = {0xC1, 0x00, 0x06};
@@ -120,9 +138,14 @@ bool E220::readBoardData(){
         return true;
     }
 }
-
+/**
+ * Used to change the radio address of the module
+ * @param newAddress new address in range 0-65535
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean represent the successful parameter change
+ */
 bool E220::setAddress(int newAddress, bool permanent) {
-    if((newAddress > 65535) | newAddress < 0){
+    if((newAddress > 65535) | (newAddress < 0)){
         Serial.println("Address out of range");
         return false;
     }
@@ -147,11 +170,22 @@ bool E220::setAddress(int newAddress, bool permanent) {
     _address =  newAddress;
     return true;
 }
-
+/**
+ * Getter for the parameter address
+ * @return _address parameter
+ */
 uint16_t E220::getAddress() {
     return _address;
 }
 
+/**
+ * private command for writing data to the module and verifying the reponse
+ * @param cmdParam the command byte to use
+ * @param address The address to start writing
+ * @param length The length of parameter data to write
+ * @param parameters The parameters in an array
+ * @return boolean response for the success of the write command
+ */
 bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
     setMode(MODE_PROGRAM);
     uint8_t message[3] = {cmdParam, address, length};
