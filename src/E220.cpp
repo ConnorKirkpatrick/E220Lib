@@ -297,21 +297,48 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
 }
 /**
  * Used to get the Air data rate of the module
- * @return
+ * @return The air data rate
  */
 uint8_t E220::getAirDataRate() {
     return _airDataRate;
 }
 
+/**
+ * Used to set the sub packet size of the module
+ * @param newSize
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
 bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
-    return false;
+    uint8_t finalByte = newSize<< 6;
+    finalByte = finalByte | (_RSSIAmbientNoise << 5);
+    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | _transmitPower;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _subPacketSize = newSize;
+    return true;
 }
-
+/**
+ * Used to get the sub packet size of the module
+ * @return The sub packet size
+ */
 uint8_t E220::getSubPacketSize() {
-    return 0;
+    return _subPacketSize;
 };
 
 
+//TODO method to print raw data out of the registers for verification
 ///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
 ///EG switch on the air data, return the baud rate as 9600 rather than 010
 

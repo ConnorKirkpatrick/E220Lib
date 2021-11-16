@@ -158,6 +158,12 @@ class E220 {
         bool setAirDataRate(uint8_t newAirData, bool permanent);
         uint8_t getAirDataRate();
 
+        bool setSubPacketSize(uint8_t newSize, bool permanent);
+        uint8_t getSubPacketSize();
+
+        bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
+        uint8_t getRSSIAmbient();
+
 
 };
 
