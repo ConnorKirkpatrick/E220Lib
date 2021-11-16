@@ -205,7 +205,12 @@ bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8
         return true;
     }
 }
-
+/**
+ * Used to set the Baud rate of the module Serial communication
+ * @param newUART New baud rate to set
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
 bool E220::setBaud(uint8_t newUART, bool permanent){
     uint8_t finalByte = newUART << 5;
     finalByte = finalByte | (_parityBit << 3);
@@ -225,10 +230,19 @@ bool E220::setBaud(uint8_t newUART, bool permanent){
     _baudRate = newUART;
     return true;
 }
+/**
+ * Used to get the current Baud rate
+ * @return The baud rate
+ */
 uint8_t E220::getBaud(){
     return _baudRate;
 }
-
+/**
+ * Used to change the Serial parity bit of the module
+ * @param newParity The new parity bit code
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
 bool E220::setParity(uint8_t newParity, bool permanent) {
     uint8_t finalByte = _baudRate << 5;
     finalByte = finalByte | (newParity << 3);
@@ -248,11 +262,20 @@ bool E220::setParity(uint8_t newParity, bool permanent) {
     _parityBit = newParity;
     return true;
 }
-
+/**
+ * Used to get the parity bit of the modules serial communication
+ * @return The parity bit
+ */
 uint8_t E220::getParity() {
     return _parityBit;
 }
-
+/**
+ * Used to set the Air data rate (transmission rate) of the module
+ * Higher rates mean lower ranges
+ * @param newAirData The new air data rate
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
 bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
     uint8_t finalByte = _baudRate << 5;
     finalByte = finalByte | (_parityBit << 3);
@@ -272,13 +295,16 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
     _airDataRate = newAirData;
     return true;
 }
-
+/**
+ * Used to get the Air data rate of the module
+ * @return
+ */
 uint8_t E220::getAirDataRate() {
     return _airDataRate;
 };
 
 
-///Maybe change the returns to use a swtich to return a textual version of the data rather than the raw binary?
+///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
 ///EG switch on the air data, return the baud rate as 9600 rather than 010
 
 
