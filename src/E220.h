@@ -120,6 +120,7 @@ class E220 {
 
     Stream* _streamSerial;
     uint8_t _Params[9];
+    uint8_t _setting;
 
     uint8_t _address;
     uint8_t _baudRate;
@@ -134,6 +135,8 @@ class E220 {
     uint8_t _LBTSetting;
     uint8_t _WORCycle;
 
+    bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
+
 
     public:
 
@@ -144,6 +147,8 @@ class E220 {
         bool init();
         void setMode(uint8_t mode);
         bool readBoardData();
+
+        bool setAddress(uint8_t newAddressL, uint8_t newAddressH, bool permanent);
 
 
 };

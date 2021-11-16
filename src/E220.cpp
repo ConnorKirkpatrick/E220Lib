@@ -29,8 +29,9 @@ bool E220::init() {
     pinMode(_AUX, INPUT);
     pinMode(_M0, OUTPUT);
     pinMode(_M1, OUTPUT);
-
-    setMode(MODE_NORMAL);
+    //set the global board mode
+    _setting = MODE_NORMAL;
+    setMode(_setting);
     bool check = readBoardData();
     if(!check){
         Serial.println("Issue initiating the module");
@@ -79,6 +80,7 @@ bool E220::readBoardData(){
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
         Serial.println("Error reading module config, check the wiring");
+        setMode(_setting);
         return false;
     }
     else{
@@ -113,8 +115,52 @@ bool E220::readBoardData(){
         //WOR
         _WORCycle = (_Params[8] & 0b00000111);
 
+        setMode(_setting);
         return true;
     }
+}
+
+bool E220::setAddress(uint8_t newAddressL, uint8_t newAddressH, bool permanent) {
+    uint8_t addresses[] = {newAddressL, newAddressH};
+    setMode(MODE_PROGRAM);
+    if(permanent){
+        if(!writeCommand(0xC1, 0x00, 0x02, addresses)){
+            setMode(_setting);
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC3, 0x00, 0x02, addresses)){
+            setMode(_setting);
+            return false;
+        }
+    }
+    // Write has succeeded, update the global parameters
+    _address =  (newAddressL << 8) | (newAddressL);
+    setMode(_setting);
+    return true;
+}
+
+bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
+    uint8_t message[3] = {cmdParam, address, length};
+    _streamSerial->write(message, sizeof(message));
+    _streamSerial->write(parameters, sizeof(parameters));
+
+    //validate the output
+    uint8_t output[sizeof(message)+sizeof(parameters)];
+    _streamSerial->readBytes(output, sizeof(output));
+    if((output[0] != cmdParam) or (output[1] != address) or (output[2] != length)){
+        return false;
+    }
+    else{
+        for(int i = 3; i<sizeof output; i++){
+            if(output[i] != parameters[i-3]){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
 
 

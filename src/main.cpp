@@ -9,41 +9,28 @@
 void readData() ;
 
 void setup(){
-      Serial.begin(9600);
-      Serial3.begin(9600); //default baud is 9600
-      pinMode(m0, OUTPUT);
-      pinMode(m1, OUTPUT);
-      pinMode(aux, INPUT);
-      Serial.println("Started");
-      //set system mode 3 to configure
-      digitalWrite(m0,HIGH);
-      digitalWrite(m1,HIGH);
-      delay(1000);
-      byte message[] = {0xC1, 0x00, 0xFF, 0xFF};
-      Serial3.write(message, sizeof(message));
-      readData();
+    Serial.begin(9600);
+    Serial3.begin(9600); //default baud is 9600
+    pinMode(m0, OUTPUT);
+    pinMode(m1, OUTPUT);
+    pinMode(aux, INPUT);
+    Serial.println("Started");
 
-/*  Serial.println("New Message");
-  byte newMessage[] = {0xC1, 0X00, 0x06};
-  Serial3.write(newMessage, sizeof(newMessage));
-  Serial.println("Message Sent");*/
-
-/*  byte param[9];
-  Serial3.readBytes((uint8_t*)&param, (uint8_t)sizeof param);
-  for (int i = 0; i < 9; i++){
-      Serial.print(param[i], HEX);
-      Serial.print("/");
-      Serial.print(param[i], BIN);
-      Serial.print("/");
-      Serial.println(param[i], DEC);
-  }
-  Serial.println("\n\n\n");
-  //readData();*/
     Serial.println("Ready");
-    //Stream &mySerial = (Stream &)Serial;
     Stream &mySerial = (Stream &)Serial3;
     E220 radioModule(&mySerial, m0, m1, aux);
     radioModule.init();
+    Serial.println(radioModule.setAddress(0x12, 0x34,1));
+
+    /*digitalWrite(m0,HIGH);
+    digitalWrite(m1,HIGH);
+    delay(100);
+    byte message[3] = {0xC1, 0x00, 0x02};
+    byte params [2] = {0x12, 0x34};
+    Serial3.write(message, sizeof message);
+    Serial3.write(params, sizeof params);
+    readData();*/
+
 }
 void loop(){
 
