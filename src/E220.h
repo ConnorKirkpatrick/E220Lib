@@ -164,6 +164,9 @@ class E220 {
         bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
         uint8_t getRSSIAmbient();
 
+        bool setPower(uint8_t newPower, bool permanent);
+        uint8_t getPower();
+
 
 };
 

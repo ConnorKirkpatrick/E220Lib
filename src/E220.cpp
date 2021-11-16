@@ -371,6 +371,42 @@ uint8_t E220::getRSSIAmbient() {
     return _RSSIAmbientNoise;
 }
 
+/**
+ * Used to set the broadcast power of the module
+ * Higher power equates to greater range but greater power draw
+ * @param ambientSetting The desired power setting
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
+bool E220::setPower(uint8_t newPower, bool permanent) {
+    uint8_t finalByte = _subPacketSize<< 6;
+    finalByte = finalByte | (_RSSIAmbientNoise << 5);
+    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | newPower;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _transmitPower = newPower;
+    return true;
+}
+
+/**
+ * Used to get the transmission power setting of the module
+ * @return The Transmission power setting
+ */
+uint8_t E220::getPower() {
+    return _transmitPower;
+}
+
 
 //TODO method to print raw data out of the registers for verification
 ///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
