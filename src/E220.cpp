@@ -19,7 +19,6 @@ E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
     _M0 = PIN_M0;
     _M1 = PIN_M1;
     _AUX = PIN_AUX;
-    //_streamSerial->println("THIS IS A TEST");
 }
 
 
@@ -32,7 +31,9 @@ bool E220::init() {
     //set the global board mode
     _setting = MODE_NORMAL;
     setMode(_setting);
+    //read board default settings and assign global values
     bool check = readBoardData();
+    //check if we were able to communicate with the board
     if(!check){
         Serial.println("Issue initiating the module");
         return false;
@@ -69,7 +70,7 @@ void E220::setMode(uint8_t mode){
             digitalWrite(_M1, LOW);
             break;
     }
-    delay(20);
+    delay(50);
 }
 
 bool E220::readBoardData(){
@@ -120,47 +121,59 @@ bool E220::readBoardData(){
     }
 }
 
-bool E220::setAddress(uint8_t newAddressL, uint8_t newAddressH, bool permanent) {
-    uint8_t addresses[] = {newAddressL, newAddressH};
-    setMode(MODE_PROGRAM);
+bool E220::setAddress(int newAddress, bool permanent) {
+    if((newAddress > 65535) | newAddress < 0){
+        Serial.println("Address out of range");
+        return false;
+    }
+    uint16_t convAddress = newAddress;
+    uint8_t addressH = ((convAddress & 0xFFFF) >> 8);
+    uint8_t addressL = (convAddress & 0xFF);
+    uint8_t addresses[] = {addressH, addressL};
     if(permanent){
-        if(!writeCommand(0xC1, 0x00, 0x02, addresses)){
+        if(!writeCommand(0xC0, 0x00, 0x02, addresses)){
             setMode(_setting);
+            Serial.println(1);
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC3, 0x00, 0x02, addresses)){
+        if(!writeCommand(0xC2, 0x00, 0x02, addresses)){
             setMode(_setting);
             return false;
         }
     }
     // Write has succeeded, update the global parameters
-    _address =  (newAddressL << 8) | (newAddressL);
-    setMode(_setting);
+    _address =  newAddress;
     return true;
 }
 
+uint16_t E220::getAddress() {
+    return _address;
+}
+
 bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
+    setMode(MODE_PROGRAM);
     uint8_t message[3] = {cmdParam, address, length};
-    _streamSerial->write(message, sizeof(message));
-    _streamSerial->write(parameters, sizeof(parameters));
+    _streamSerial->write(message, sizeof message);
+    _streamSerial->write(parameters, length);
 
     //validate the output
-    uint8_t output[sizeof(message)+sizeof(parameters)];
+    uint8_t output[(uint8_t)sizeof(message)+(uint8_t)sizeof(parameters)];
     _streamSerial->readBytes(output, sizeof(output));
-    if((output[0] != cmdParam) or (output[1] != address) or (output[2] != length)){
+    setMode(_setting);
+    if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
         return false;
     }
     else{
-        for(int i = 3; i<sizeof output; i++){
+        for(int i = 3; i < sizeof output; i++){
             if(output[i] != parameters[i-3]){
                 return false;
             }
         }
         return true;
     }
-
 }
+
 
 

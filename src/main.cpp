@@ -20,17 +20,19 @@ void setup(){
     Stream &mySerial = (Stream &)Serial3;
     E220 radioModule(&mySerial, m0, m1, aux);
     radioModule.init();
-    Serial.println(radioModule.setAddress(0x12, 0x34,1));
-
-    /*digitalWrite(m0,HIGH);
+    Serial.println(radioModule.setAddress(25000, true));
+    Serial.println(radioModule.getAddress());
+    /*
+    digitalWrite(m0,HIGH);
     digitalWrite(m1,HIGH);
     delay(100);
-    byte message[3] = {0xC1, 0x00, 0x02};
-    byte params [2] = {0x12, 0x34};
+    //WRITE
+    byte message[3] = {0xC0, 0x00, 0x02};
+    byte params [2] = {0x66, 0x99};
     Serial3.write(message, sizeof message);
     Serial3.write(params, sizeof params);
-    readData();*/
-
+    readData();
+    */
 }
 void loop(){
 

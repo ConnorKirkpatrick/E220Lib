@@ -122,7 +122,7 @@ class E220 {
     uint8_t _Params[9];
     uint8_t _setting;
 
-    uint8_t _address;
+    uint16_t _address;
     uint8_t _baudRate;
     uint8_t _parityBit;
     uint8_t _airDataRate;
@@ -148,7 +148,8 @@ class E220 {
         void setMode(uint8_t mode);
         bool readBoardData();
 
-        bool setAddress(uint8_t newAddressL, uint8_t newAddressH, bool permanent);
+        bool setAddress(int newAddress, bool permanent);
+        uint16_t getAddress();
 
 
 };
