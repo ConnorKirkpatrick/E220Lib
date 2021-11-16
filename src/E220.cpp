@@ -335,7 +335,41 @@ bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
  */
 uint8_t E220::getSubPacketSize() {
     return _subPacketSize;
-};
+}
+
+/**
+ * Used to set the RSSI Ambient Noise registers of the module in normal mode
+ * @param ambientSetting The desired setting of the Ambient noise setting
+ * @param permanent Set this as a non-volatile parameter
+ * @return Boolean success parameter
+ */
+bool E220::setRSSIAmbient(uint8_t ambientSetting, bool permanent) {
+    uint8_t finalByte = _subPacketSize<< 6;
+    finalByte = finalByte | (ambientSetting << 5);
+    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | _transmitPower;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _RSSIAmbientNoise = ambientSetting;
+    return true;
+}
+/**
+ * Used to get the RSSI Ambient noise setting of the module
+ * @return The Ambient Noise setting
+ */
+uint8_t E220::getRSSIAmbient() {
+    return _RSSIAmbientNoise;
+}
 
 
 //TODO method to print raw data out of the registers for verification
