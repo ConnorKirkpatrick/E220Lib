@@ -217,12 +217,12 @@ bool E220::setBaud(uint8_t newUART, bool permanent){
     finalByte = finalByte | _airDataRate;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
             return false;
         }
     }
@@ -249,12 +249,12 @@ bool E220::setParity(uint8_t newParity, bool permanent) {
     finalByte = finalByte | _airDataRate;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
             return false;
         }
     }
@@ -282,12 +282,12 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
     finalByte = finalByte | newAirData;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
             return false;
         }
     }
@@ -301,6 +301,14 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
  */
 uint8_t E220::getAirDataRate() {
     return _airDataRate;
+}
+
+bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
+    return false;
+}
+
+uint8_t E220::getSubPacketSize() {
+    return 0;
 };
 
 
