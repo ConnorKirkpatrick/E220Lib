@@ -155,14 +155,11 @@ bool E220::setAddress(int newAddress, bool permanent) {
     uint8_t addresses[] = {addressH, addressL};
     if(permanent){
         if(!writeCommand(0xC0, 0x00, 0x02, addresses)){
-            setMode(_setting);
-            Serial.println(1);
             return false;
         }
     }
     else{
         if(!writeCommand(0xC2, 0x00, 0x02, addresses)){
-            setMode(_setting);
             return false;
         }
     }
@@ -208,6 +205,29 @@ bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8
         return true;
     }
 }
+
+bool E220::setBaud(uint8_t newUART, bool permanent){
+    uint8_t finalByte = newUART << 5;
+    finalByte = finalByte | (_parityBit << 3);
+    finalByte = finalByte | _airDataRate;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x00, 0x01, registerParams)){
+            return false;
+        }
+    }
+    //success, update the global params
+    _baudRate = newUART;
+    return true;
+}
+uint8_t E220::getBaud(){
+    return _baudRate;
+};
 
 
 

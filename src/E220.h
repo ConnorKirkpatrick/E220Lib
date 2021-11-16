@@ -142,14 +142,14 @@ class E220 {
 
         E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
 
-
-
         bool init();
         void setMode(uint8_t mode);
         bool readBoardData();
 
         bool setAddress(int newAddress, bool permanent);
         uint16_t getAddress();
+        bool setBaud(uint8_t newUART, bool permanent);
+        uint8_t getBaud();
 
 
 };
