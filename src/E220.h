@@ -57,15 +57,15 @@
 #define ADR_4800 0b011		    // 4800 baud
 #define ADR_9600 0b100		    // 9600 baud
 #define ADR_19200 0b101		    // 19200 baud
-#define ADR_38400 0b110		    // 19200 baud
-#define ADR_62500 0b110	        // 19200 baud
+#define ADR_38400 0b110		    // 38400 baud
+#define ADR_62500 0b111	        // 62500 baud
 
 //Register 3
 //sub-packet size setting
 #define SPS_200 0b00        //200 bytes
-#define SPS_128 0b01        //200bytes
-#define SPS_64 0b10         //200bytes
-#define SPS_32 0b11         //200bytes
+#define SPS_128 0b01        //128bytes
+#define SPS_64 0b10         //64bytes
+#define SPS_32 0b11         //32bytes
 
 //RSSI Ambient Noise Enable
 #define RAN_D 0b00          //disabled (default)
@@ -86,21 +86,21 @@
 
 //Transmission Mode
 #define Transparent 0b00    //Transparent transmission (default)
-#define Fixed   0b00        //Fixed transmission; Module will take the first 3 bytes on serial as address high+low+channel
+#define Fixed   0b01        //Fixed transmission; Module will take the first 3 bytes on serial as address high+low+channel
 
 //LBT
 #define LBT_D 0b00          //No LBT Monitoring
 #define LBT_E 0b01          //LBT Enabled, system will monitor the channel to try to avoid interference when transmitting, can cause delays of upto 2 seconds max
 
 //WOR Cycle
-#define FiveHundred 0b00                    //WOR cycle awake every 500ms
-#define oneThousand 0b00                    //WOR cycle awake every 1000ms
-#define oneThousandFiveHundred 0b00         //WOR cycle awake every 1500ms
-#define twoThousand 0b00                    //WOR cycle awake every 2000ms
-#define twoThousandFiveHundred 0b00         //WOR cycle awake every 2500ms
-#define threeThousand 0b00                  //WOR cycle awake every 3000ms
-#define threeThousandFiveHundred 0b00       //WOR cycle awake every 3500ms
-#define fourThousand 0b00                   //WOR cycle awake every 4000ms
+#define FiveHundred 0b000                    //WOR cycle awake every 500ms
+#define oneThousand 0b001                    //WOR cycle awake every 1000ms
+#define oneThousandFiveHundred 0b010         //WOR cycle awake every 1500ms
+#define twoThousand 0b011                    //WOR cycle awake every 2000ms
+#define twoThousandFiveHundred 0b100         //WOR cycle awake every 2500ms
+#define threeThousand 0b101                  //WOR cycle awake every 3000ms
+#define threeThousandFiveHundred 0b110       //WOR cycle awake every 3500ms
+#define fourThousand 0b111                   //WOR cycle awake every 4000ms
 
 //Register 6
 //cryptoKey high and low, the two halves of the crypto key
@@ -166,6 +166,8 @@ class E220 {
 
         bool setPower(uint8_t newPower, bool permanent);
         uint8_t getPower();
+
+        void printBoardParmeters();
 
 
 };

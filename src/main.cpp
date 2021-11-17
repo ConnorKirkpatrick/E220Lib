@@ -1,6 +1,10 @@
-#define m0 8
-#define m1 9
-#define aux 10
+#define m0_1 3
+#define m1_1 2
+#define aux_1 4
+
+#define m0_3 8
+#define m1_3 9
+#define aux_3 10
 
 #include "Arduino.h"
 #include "E220.h"
@@ -11,21 +15,28 @@ void readData() ;
 void setup(){
     Serial.begin(9600);
     Serial3.begin(9600); //default baud is 9600
-    pinMode(m0, OUTPUT);
-    pinMode(m1, OUTPUT);
-    pinMode(aux, INPUT);
+    Serial1.begin(9600);
+
+
     Serial.println("Started");
 
     Serial.println("Ready");
-    Stream &mySerial = (Stream &)Serial3;
-    E220 radioModule(&mySerial, m0, m1, aux);
-    radioModule.init();
-    Serial.println(radioModule.setAddress(25000, true));
-    Serial.println(radioModule.getAddress());
-    Serial.println(radioModule.setAirDataRate(ADR_9600,1));
-    Serial.println(radioModule.getAirDataRate());
-    Serial.println(radioModule.setPower(Power_21,1));
-    Serial.println(radioModule.getPower(),BIN);
+
+    Stream &mySerial1 = (Stream &)Serial1;
+    E220 radioModule1(&mySerial1, m0_1, m1_1, aux_1);
+
+    Stream &mySerial3 = (Stream &)Serial3;
+    E220 radioModule3(&mySerial3, m0_3, m1_3, aux_3);
+
+    radioModule3.init();
+    radioModule3.setAddress(3,1);
+    Serial.println(radioModule3.getAddress());
+
+    radioModule1.init();
+    radioModule1.setAddress(1,1);
+    Serial.println(radioModule1.getAddress());
+    //radioModule3.
+
     /*
     digitalWrite(m0,HIGH);
     digitalWrite(m1,HIGH);

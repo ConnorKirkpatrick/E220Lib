@@ -407,9 +407,111 @@ uint8_t E220::getPower() {
     return _transmitPower;
 }
 
+void E220::printBoardParmeters() {
+    setMode(MODE_PROGRAM);
+    byte configCommand[] = {0xC1, 0x00, 0x06};
+    _streamSerial->write(configCommand, sizeof(configCommand));
+    _streamSerial->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
+    //check the first 3 parts of the data are the same
+    if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
+        Serial.println("Error reading module config, check the wiring");
+        setMode(_setting);
+    }
+    else{
+        //print the raw output
+        Serial.println("Raw Data:");
+        Serial.println("HEX/BINARY/DECIMAL");
+        for(int i = 0; i < sizeof _Params; i++){
+            Serial.print(_Params[i], HEX);
+            Serial.print("/");
+            Serial.print(_Params[i], BIN);
+            Serial.print("/");
+            Serial.println(_Params[i], DEC);
+        }
+        Serial.println("");
+        //values in register 0&1
+        _address =  (_Params[3] << 8) | (_Params[4]);
+        //values in register 2
+        //uart
+        _baudRate = (_Params[5] & 0b11100000) >> 5;
+        //Parity
+        _parityBit = (_Params[5] & 0b00011000) >> 3;
+        //ADR
+        _airDataRate = (_Params[5] & 0b00000111);
+
+        //values in register 3
+        //Sub Packet
+        _subPacketSize = (_Params[6] & 0b11000000) >> 6;
+        //Ambient Noise
+        _RSSIAmbientNoise = (_Params[6] & 0b00100000) >> 5;
+        //Power Setting
+        _transmitPower = (_Params[6] & 0b00000011);
+
+        //values in register 4
+        _channel = _Params[7];
+
+        //values in register 5
+        //RSSI Byte
+        _RSSIByte = (_Params[8] & 0b10000000) >> 7;
+        //Transmission Method
+        _transmissionMethod = (_Params[8] & 0b01000000) >> 6;
+        //LBT
+        _LBTSetting = (_Params[8] & 0b00010000) >> 4;
+        //WOR
+        _WORCycle = (_Params[8] & 0b00000111);
+
+        Serial.print("Address: ");
+        Serial.println(_address);
+        Serial.print("Baud Rate setting: ");
+        Serial.println(_baudRate, BIN);
+        Serial.print("Parity Bit setting: ");
+        Serial.println(_parityBit, BIN);
+        Serial.print("Air Data Rate setting: ");
+        Serial.println(_airDataRate, BIN);
+        Serial.print("Sub Packet Size setting: ");
+        Serial.println(_subPacketSize, BIN);
+        Serial.print("RSSI Ambient Noise Toggle: ");
+        Serial.println(_RSSIAmbientNoise, BIN);
+        Serial.print("Transmission Power: ");
+        Serial.println(_transmitPower, BIN);
+        Serial.print("RSSI Byte Toggle: ");
+        Serial.println(_RSSIByte, BIN);
+        Serial.print("Transmission Mode Toggle (Fixed = 1): ");
+        Serial.println(_transmissionMethod, BIN);
+        Serial.print("LBT Monitoring Toggle: ");
+        Serial.println(_LBTSetting, BIN);
+        Serial.print("WOR Cycle setting: ");
+        Serial.println(_WORCycle, HEX);
+        Serial.println("\n");
+        Serial.println("DEFINITIONS:");
+        Serial.println("BAUD:");
+        Serial.println("000 -> 1200baud; 001 -> 2400baud; 010 -> 4800baud; 011 -> 9600baud");
+        Serial.println("100 -> 19200baud; 101 -> 34800baud; 110 -> 57600baud; 111 -> 115200baud");
+        Serial.println("");
+        Serial.println("PARITY:");
+        Serial.println("000 -> 8N1; 001 -> 801; 010 -> 8E1; ");
+        Serial.println("");
+        Serial.println("AIR DATA RATES:");
+        Serial.println("010 -> 2400baud; 011 -> 4800baud; 100 -> 9600baud; 101 -> 19200baud");
+        Serial.println("110 -> 38400baud; 111 -> 62500baud");
+        Serial.println("");
+        Serial.println("Sub Packet Setting:");
+        Serial.println("00 -> 200Bytes; 01 -> 128Bytes; 10 -> 64Bytes; 11 -> 32Bytes");
+        Serial.println("");
+        Serial.println("Transmission Power:");
+        Serial.println("00 -> 30dBm; 01 -> 27dBm; 10 -> 24dBm; 11 -> 21dBm");
+        Serial.println("WOR Cycle:");
+        Serial.println("000 -> 500ms; 001 -> 1000ms; 010 -> 1500ms; 011 -> 2000ms");
+        Serial.println("100 -> 2500ms; 101 -> 3000ms; 110 -> 3500ms; 111 -> 4000ms");
+        Serial.println("");
+        setMode(_setting);
+    }
+}
+
 
 //TODO method to print raw data out of the registers for verification
 ///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
 ///EG switch on the air data, return the baud rate as 9600 rather than 010
+//TODO fix adr read not collecting correctly
 
 
