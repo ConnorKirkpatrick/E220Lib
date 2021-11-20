@@ -312,7 +312,7 @@ uint8_t E220::getAirDataRate() {
 bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
     uint8_t finalByte = newSize<< 6;
     finalByte = finalByte | (_RSSIAmbientNoise << 5);
-    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | (0x1C);
     finalByte = finalByte | _transmitPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
@@ -346,7 +346,7 @@ uint8_t E220::getSubPacketSize() {
 bool E220::setRSSIAmbient(uint8_t ambientSetting, bool permanent) {
     uint8_t finalByte = _subPacketSize<< 6;
     finalByte = finalByte | (ambientSetting << 5);
-    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | (0x1C);
     finalByte = finalByte | _transmitPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
@@ -381,7 +381,7 @@ uint8_t E220::getRSSIAmbient() {
 bool E220::setPower(uint8_t newPower, bool permanent) {
     uint8_t finalByte = _subPacketSize<< 6;
     finalByte = finalByte | (_RSSIAmbientNoise << 5);
-    finalByte = finalByte | (0x1C << 2);
+    finalByte = finalByte | (0x1C);
     finalByte = finalByte | newPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
@@ -474,6 +474,8 @@ void E220::printBoardParmeters() {
         Serial.println(_RSSIAmbientNoise, BIN);
         Serial.print("Transmission Power: ");
         Serial.println(_transmitPower, BIN);
+        Serial.print("Channel: ");
+        Serial.println(_channel);
         Serial.print("RSSI Byte Toggle: ");
         Serial.println(_RSSIByte, BIN);
         Serial.print("Transmission Mode Toggle (Fixed = 1): ");
@@ -512,6 +514,5 @@ void E220::printBoardParmeters() {
 //TODO method to print raw data out of the registers for verification
 ///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
 ///EG switch on the air data, return the baud rate as 9600 rather than 010
-//TODO fix adr read not collecting correctly
 
 
