@@ -150,22 +150,22 @@ class E220 {
         uint16_t getAddress();
 
         bool setBaud(uint8_t newUART, bool permanent);
-        uint8_t getBaud();
+        int getBaud();
 
         bool setParity(uint8_t newParity, bool permanent);
-        uint8_t getParity();
+        String getParity();
 
         bool setAirDataRate(uint8_t newAirData, bool permanent);
-        uint8_t getAirDataRate();
+        int getAirDataRate();
 
         bool setSubPacketSize(uint8_t newSize, bool permanent);
-        uint8_t getSubPacketSize();
+        int getSubPacketSize();
 
         bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
         uint8_t getRSSIAmbient();
 
         bool setPower(uint8_t newPower, bool permanent);
-        uint8_t getPower();
+        int getPower();
 
         void printBoardParmeters();
 

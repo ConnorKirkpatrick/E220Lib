@@ -234,7 +234,25 @@ bool E220::setBaud(uint8_t newUART, bool permanent){
  * Used to get the current Baud rate
  * @return The baud rate
  */
-uint8_t E220::getBaud(){
+int E220::getBaud(){
+    switch(_baudRate){
+        case 0b000:
+            return 1200;
+        case 0b001:
+            return 2400;
+        case 0b010:
+            return 4800;
+        case 0b011:
+            return 9600;
+        case 0b100:
+            return 19200;
+        case 0b101:
+            return 38400;
+        case 0b110:
+            return 57600;
+        case 0b111:
+            return 115200;
+    }
     return _baudRate;
 }
 /**
@@ -266,8 +284,17 @@ bool E220::setParity(uint8_t newParity, bool permanent) {
  * Used to get the parity bit of the modules serial communication
  * @return The parity bit
  */
-uint8_t E220::getParity() {
-    return _parityBit;
+String E220::getParity() {
+    switch(_parityBit){
+        case 0b00:
+            return "8N1";
+        case 0b01:
+            return "8O1";
+        case 0b10:
+            return "8E1";
+        case 0b11:
+            return "8N1"
+    }
 }
 /**
  * Used to set the Air data rate (transmission rate) of the module
@@ -297,10 +324,29 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
 }
 /**
  * Used to get the Air data rate of the module
- * @return The air data rate
+ * @return The air data rate in Hertz
  */
-uint8_t E220::getAirDataRate() {
-    return _airDataRate;
+int E220::getAirDataRate() {
+    switch(_airDataRate){
+        case 0b000:
+            return 300;
+        case 0b001:
+            return 1200;
+        case 0b010:
+            return 2400;
+        case 0b011:
+            return 4800;
+        case 0b100:
+            return 9600;
+        case 0b101:
+            return 19200;
+        case 0b110:
+            return 38400;
+        case 0b111:
+            return 62500;
+
+
+    }
 }
 
 /**
@@ -333,8 +379,17 @@ bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
  * Used to get the sub packet size of the module
  * @return The sub packet size
  */
-uint8_t E220::getSubPacketSize() {
-    return _subPacketSize;
+int E220::getSubPacketSize() {
+    switch(_subPacketSize){
+        case 0b00:
+            return 240;
+        case 0b01:
+            return 128;
+        case 0b10:
+            return 64;
+        case 0b11:
+            return 32;
+    }
 }
 
 /**
@@ -401,10 +456,19 @@ bool E220::setPower(uint8_t newPower, bool permanent) {
 
 /**
  * Used to get the transmission power setting of the module
- * @return The Transmission power setting
+ * @return The Transmission power setting in dBm
  */
-uint8_t E220::getPower() {
-    return _transmitPower;
+int E220::getPower() {
+    switch(_transmitPower){
+        case 0b00:
+            return 30;
+        case 0b01:
+            return 27;
+        case 0b10:
+            return 24;
+        case 0b11:
+            return 21;
+    }
 }
 
 void E220::printBoardParmeters() {
@@ -484,29 +548,6 @@ void E220::printBoardParmeters() {
         Serial.println(_LBTSetting, BIN);
         Serial.print("WOR Cycle setting: ");
         Serial.println(_WORCycle, HEX);
-        Serial.println("\n");
-        Serial.println("DEFINITIONS:");
-        Serial.println("BAUD:");
-        Serial.println("000 -> 1200baud; 001 -> 2400baud; 010 -> 4800baud; 011 -> 9600baud");
-        Serial.println("100 -> 19200baud; 101 -> 34800baud; 110 -> 57600baud; 111 -> 115200baud");
-        Serial.println("");
-        Serial.println("PARITY:");
-        Serial.println("000 -> 8N1; 001 -> 801; 010 -> 8E1; ");
-        Serial.println("");
-        Serial.println("AIR DATA RATES:");
-        Serial.println("010 -> 2400baud; 011 -> 4800baud; 100 -> 9600baud; 101 -> 19200baud");
-        Serial.println("110 -> 38400baud; 111 -> 62500baud");
-        Serial.println("");
-        Serial.println("Sub Packet Setting:");
-        Serial.println("00 -> 200Bytes; 01 -> 128Bytes; 10 -> 64Bytes; 11 -> 32Bytes");
-        Serial.println("");
-        Serial.println("Transmission Power:");
-        Serial.println("00 -> 30dBm; 01 -> 27dBm; 10 -> 24dBm; 11 -> 21dBm");
-        Serial.println("WOR Cycle:");
-        Serial.println("000 -> 500ms; 001 -> 1000ms; 010 -> 1500ms; 011 -> 2000ms");
-        Serial.println("100 -> 2500ms; 101 -> 3000ms; 110 -> 3500ms; 111 -> 4000ms");
-        Serial.println("");
-        setMode(_setting);
     }
 }
 
