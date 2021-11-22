@@ -170,6 +170,9 @@ class E220 {
         bool setChannel(int newChannel, bool permanent);
         int getChannel();
 
+        bool setRSSIByteToggle(bool Setting, bool permanent);
+        bool getRSSIByteToggle();
+
 
 
 

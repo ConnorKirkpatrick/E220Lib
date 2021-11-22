@@ -30,6 +30,8 @@ void setup(){
 
     radioModule3.init();
     radioModule1.init();
+    radioModule1.setRSSIByteToggle(true,1);
+    Serial.println(radioModule1.getChannel());
     radioModule1.printBoardParmeters();
 
 

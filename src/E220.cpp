@@ -566,13 +566,14 @@ bool E220::setChannel(int newChannel, bool permanent) {
         return false;
     }
     else{
+        uint8_t registerParams[] = {static_cast<uint8_t>(newChannel)};
         if(permanent){
-            if(!writeCommand(0xC0, 0x04, 0x01, reinterpret_cast<uint8_t *>(newChannel))){
+            if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
                 return false;
             }
         }
         else{
-            if(!writeCommand(0xC2, 0x04, 0x01, reinterpret_cast<uint8_t *>(newChannel))){
+            if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
                 return false;
             }
         }
@@ -587,6 +588,44 @@ bool E220::setChannel(int newChannel, bool permanent) {
  */
 int E220::getChannel() {
     return _channel;
+}
+
+/**
+ * Setter for the RSSIByte toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
+    uint8_t finalByte = toggle << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    //finalByte = finalByte | (0 << 5);
+    finalByte = finalByte | (_LBTSetting << 4);
+    //finalByte = finalByte | (0 << 3);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _RSSIByte = Setting;
+    return true;
+}
+
+/**
+ * getter for the RSSIByte toggle
+ * @return {int} The channel
+ */
+bool E220::getRSSIByteToggle() {
+    return _RSSIByte;
 }
 
 
