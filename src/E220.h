@@ -173,6 +173,9 @@ class E220 {
         bool setRSSIByteToggle(bool Setting, bool permanent);
         bool getRSSIByteToggle();
 
+        bool setFixedTransimission(bool Setting, bool permanent);
+        bool getFixedTransmission();
+
 
 
 

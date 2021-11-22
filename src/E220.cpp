@@ -628,6 +628,36 @@ bool E220::getRSSIByteToggle() {
     return _RSSIByte;
 }
 
+bool E220::setFixedTransimission(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
+
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (toggle << 6);
+    //finalByte = finalByte | (0 << 5);
+    finalByte = finalByte | (_LBTSetting << 4);
+    //finalByte = finalByte | (0 << 3);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _transmissionMethod = Setting;
+    return true;
+
+}
+
+bool E220::getFixedTransmission() {
+    return _transmissionMethod;
+}
+
 
 //TODO method to print raw data out of the registers for verification
 ///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
