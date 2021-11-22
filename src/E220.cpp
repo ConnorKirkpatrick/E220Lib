@@ -293,7 +293,7 @@ String E220::getParity() {
         case 0b10:
             return "8E1";
         case 0b11:
-            return "8N1"
+            return "8N1";
     }
 }
 /**
@@ -471,6 +471,9 @@ int E220::getPower() {
     }
 }
 
+
+
+
 void E220::printBoardParmeters() {
     setMode(MODE_PROGRAM);
     byte configCommand[] = {0xC1, 0x00, 0x06};
@@ -549,6 +552,41 @@ void E220::printBoardParmeters() {
         Serial.print("WOR Cycle setting: ");
         Serial.println(_WORCycle, HEX);
     }
+}
+
+/**
+ * Function used to set the channel between 0-80 in register 4
+ * @param {int} newChannel the new channel
+ * @param {bool} Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setChannel(int newChannel, bool permanent) {
+    if(newChannel < 0 | newChannel > 80){
+        Serial.print("Channel out of range 0-80");
+        return false;
+    }
+    else{
+        if(permanent){
+            if(!writeCommand(0xC0, 0x04, 0x01, reinterpret_cast<uint8_t *>(newChannel))){
+                return false;
+            }
+        }
+        else{
+            if(!writeCommand(0xC2, 0x04, 0x01, reinterpret_cast<uint8_t *>(newChannel))){
+                return false;
+            }
+        }
+        _channel = newChannel;
+        return true;
+    }
+}
+
+/**
+ * getter for the channel parameter
+ * @return {int} The channel
+ */
+int E220::getChannel() {
+    return _channel;
 }
 
 

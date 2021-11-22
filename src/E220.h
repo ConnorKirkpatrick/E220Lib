@@ -167,6 +167,13 @@ class E220 {
         bool setPower(uint8_t newPower, bool permanent);
         int getPower();
 
+        bool setChannel(int newChannel, bool permanent);
+        int getChannel();
+
+
+
+
+
         void printBoardParmeters();
 
 

@@ -30,8 +30,7 @@ void setup(){
 
     radioModule3.init();
     radioModule1.init();
-    radioModule1.setBaud(UDR_9600,1);
-    Serial.println(radioModule1.getBaud());
+    radioModule1.printBoardParmeters();
 
 
     Serial3.write("Some test data/mE");
