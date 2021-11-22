@@ -176,6 +176,12 @@ class E220 {
         bool setFixedTransimission(bool Setting, bool permanent);
         bool getFixedTransmission();
 
+        bool setLBT(bool Setting, bool permanent);
+        bool getLBT();
+
+        bool setWORCycle(uint8_t WORSetting, bool permanent);
+        int getWORCycle();
+
 
 
 

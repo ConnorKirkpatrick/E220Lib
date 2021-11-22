@@ -30,8 +30,8 @@ void setup(){
 
     radioModule3.init();
     radioModule1.init();
-    radioModule1.setFixedTransimission(true,1);
-    Serial.println(radioModule1.getFixedTransmission());
+    radioModule1.setLBT(1,1);
+    Serial.println(radioModule1.getLBT());
     radioModule1.printBoardParmeters();
 
 

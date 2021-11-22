@@ -622,12 +622,18 @@ bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
 
 /**
  * getter for the RSSIByte toggle
- * @return {int} The channel
+ * @return {int} The RSSIByte toggle
  */
 bool E220::getRSSIByteToggle() {
     return _RSSIByte;
 }
 
+/**
+ * Setter for the TransmissionMode toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
 bool E220::setFixedTransimission(bool Setting, bool permanent) {
     uint8_t toggle = 0b0;
     if(Setting){toggle = 0b1;}
@@ -653,14 +659,105 @@ bool E220::setFixedTransimission(bool Setting, bool permanent) {
     return true;
 
 }
-
+/**
+ * getter for the Transmission Method
+ * @return {int} The transmission method
+ */
 bool E220::getFixedTransmission() {
     return _transmissionMethod;
 }
 
+/**
+ * Setter for the LBT toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setLBT(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
 
-//TODO method to print raw data out of the registers for verification
-///Maybe change the returns to use a switch to return a textual version of the data rather than the raw binary?
-///EG switch on the air data, return the baud rate as 9600 rather than 010
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    //finalByte = finalByte | (0 << 5);
+    finalByte = finalByte | (toggle << 4);
+    //finalByte = finalByte | (0 << 3);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _LBTSetting = Setting;
+    return true;
+}
+
+/**
+ * getter for the LBT Setting
+ * @return {int} The LBT Setting
+ */
+bool E220::getLBT() {
+    return _LBTSetting;
+}
+
+/**
+ * Setter for the WOR Cycle setting
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setWORCycle(uint8_t WORSetting, bool permanent) {
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    //finalByte = finalByte | (0 << 5);
+    finalByte = finalByte | (_LBTSetting << 4);
+    //finalByte = finalByte | (0 << 3);
+    finalByte = finalByte | WORSetting;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _WORCycle = WORSetting;
+    return true;
+}
+/**
+ * getter for the Wor Cycle
+ * @return {int} The WOR Cycle
+ */
+int E220::getWORCycle() {
+    switch(_WORCycle){
+        case 0b000:
+            return 500;
+        case 0b001:
+            return 1000;
+        case 0b010:
+            return 1500;
+        case 0b011:
+            return 2000;
+        case 0b100:
+            return 2500;
+        case 0b101:
+            return 3000;
+        case 0b110:
+            return 3500;
+        case 0b111:
+            return 4000;
+
+    }
+}
+
 
 
