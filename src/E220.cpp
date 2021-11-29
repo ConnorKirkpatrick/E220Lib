@@ -100,9 +100,6 @@ bool E220::readBoardData(){
     _streamSerial->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
-        Serial.println(_Params[0], HEX);
-        Serial.println(_Params[1], HEX);
-        Serial.println(_Params[2], HEX);
         Serial.println("Error reading module config, check the wiring");
         setMode(_setting);
         return false;
