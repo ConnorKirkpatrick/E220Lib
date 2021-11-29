@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ###Arduino E200 Library
 
 Arduino library made to interface an EBYTE E220 type module.
