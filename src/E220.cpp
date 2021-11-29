@@ -1,7 +1,9 @@
-//
-// Created by connor on 15/11/2021.
-//
-
+/**
+ *  Simple library used for the configuration of EBYTE E220 modules
+ *  @author Connor Kirkpatrick
+ *  @date 15/11/2021
+ *  @cite https://github.com/KrisKasprzak/EBYTE
+ */
 #include "E220.h"
 
 #include "Stream.h"
@@ -65,7 +67,6 @@ void E220::setMode(uint8_t mode){
         case MODE_NORMAL:
             digitalWrite(_M0, LOW);
             digitalWrite(_M1, LOW);
-            Serial.println("Mode normal");
             break;
         case MODE_WOR_SENDING:
             digitalWrite(_M0, HIGH);
@@ -78,7 +79,6 @@ void E220::setMode(uint8_t mode){
         case MODE_PROGRAM:
             digitalWrite(_M0, HIGH);
             digitalWrite(_M1, HIGH);
-            Serial.println("Mode Program");
             break;
         default:
             digitalWrite(_M0, LOW);
@@ -143,6 +143,36 @@ bool E220::readBoardData(){
     }
 }
 /**
+ * private command for writing data to the module and verifying the response
+ * @param cmdParam the command byte to use
+ * @param address The address to start writing
+ * @param length The length of parameter data to write
+ * @param parameters The parameters in an array
+ * @return boolean response for the success of the write command
+ */
+bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
+    setMode(MODE_PROGRAM);
+    uint8_t message[3] = {cmdParam, address, length};
+    _streamSerial->write(message, sizeof message);
+    _streamSerial->write(parameters, length);
+
+    //validate the output
+    uint8_t output[sizeof(message)+length];
+    _streamSerial->readBytes(output, sizeof(output));
+    setMode(_setting);
+    if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
+        return false;
+    }
+    else{
+        for(int i = 3; i < sizeof output; i++){
+            if(output[i] != parameters[i-3]){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+/**
  * Used to change the radio address of the module
  * @param newAddress new address in range 0-65535
  * @param permanent Set this as a non-volatile parameter
@@ -179,36 +209,7 @@ uint16_t E220::getAddress() {
     return _address;
 }
 
-/**
- * private command for writing data to the module and verifying the response
- * @param cmdParam the command byte to use
- * @param address The address to start writing
- * @param length The length of parameter data to write
- * @param parameters The parameters in an array
- * @return boolean response for the success of the write command
- */
-bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
-    setMode(MODE_PROGRAM);
-    uint8_t message[3] = {cmdParam, address, length};
-    _streamSerial->write(message, sizeof message);
-    _streamSerial->write(parameters, length);
 
-    //validate the output
-    uint8_t output[sizeof(message)+length];
-    _streamSerial->readBytes(output, sizeof(output));
-    setMode(_setting);
-    if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
-        return false;
-    }
-    else{
-        for(int i = 3; i < sizeof output; i++){
-            if(output[i] != parameters[i-3]){
-                return false;
-            }
-        }
-        return true;
-    }
-}
 /**
  * Used to set the Baud rate of the module Serial communication
  * @param newUART New baud rate to set
@@ -476,9 +477,207 @@ int E220::getPower() {
     }
 }
 
+/**
+ * Function used to set the channel between 0-80 in register 4
+ * @param {int} newChannel the new channel
+ * @param {bool} Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setChannel(int newChannel, bool permanent) {
+    if(newChannel < 0 | newChannel > 83){
+        Serial.print("Channel out of range 0-83");
+        return false;
+    }
+    else{
+        uint8_t registerParams[] = {static_cast<uint8_t>(newChannel)};
+        if(permanent){
+            if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
+                return false;
+            }
+        }
+        else{
+            if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
+                return false;
+            }
+        }
+        _channel = newChannel;
+        return true;
+    }
+}
+
+/**
+ * getter for the channel parameter
+ * @return {int} The channel
+ */
+int E220::getChannel() {
+    return _channel;
+}
+
+/**
+ * Setter for the RSSIByte toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
+    uint8_t finalByte = toggle << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    finalByte = finalByte | (_LBTSetting << 4);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _RSSIByte = Setting;
+    return true;
+}
+
+/**
+ * getter for the RSSIByte toggle
+ * @return {int} The RSSIByte toggle
+ */
+bool E220::getRSSIByteToggle() {
+    return _RSSIByte;
+}
+
+/**
+ * Setter for the TransmissionMode toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setFixedTransimission(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
+
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (toggle << 6);
+    finalByte = finalByte | (_LBTSetting << 4);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _transmissionMethod = Setting;
+    return true;
+
+}
+/**
+ * getter for the Transmission Method
+ * @return {int} The transmission method
+ */
+bool E220::getFixedTransmission() {
+    return _transmissionMethod;
+}
+
+/**
+ * Setter for the LBT toggle
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setLBT(bool Setting, bool permanent) {
+    uint8_t toggle = 0b0;
+    if(Setting){toggle = 0b1;}
+
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    finalByte = finalByte | (toggle << 4);
+    finalByte = finalByte | _WORCycle;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _LBTSetting = Setting;
+    return true;
+}
+
+/**
+ * getter for the LBT Setting
+ * @return {int} The LBT Setting
+ */
+bool E220::getLBT() {
+    return _LBTSetting;
+}
+
+/**
+ * Setter for the WOR Cycle setting
+ * @param {bool} Setting The desired setting
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setWORCycle(uint8_t WORSetting, bool permanent) {
+    uint8_t finalByte = _RSSIByte << 7;
+    finalByte = finalByte | (_transmissionMethod << 6);
+    finalByte = finalByte | (_LBTSetting << 4);
+    finalByte = finalByte | WORSetting;
+    uint8_t registerParams[] = {finalByte};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _WORCycle = WORSetting;
+    return true;
+}
+/**
+ * getter for the Wor Cycle
+ * @return {int} The WOR Cycle
+ */
+int E220::getWORCycle() {
+    switch(_WORCycle){
+        case 0b000:
+            return 500;
+        case 0b001:
+            return 1000;
+        case 0b010:
+            return 1500;
+        case 0b011:
+            return 2000;
+        case 0b100:
+            return 2500;
+        case 0b101:
+            return 3000;
+        case 0b110:
+            return 3500;
+        case 0b111:
+            return 4000;
+
+    }
+}
 
 
-
+/**
+ * Method used to print the raw parameters from the module, mainly used for sanity checking
+ */
 void E220::printBoardParmeters() {
     setMode(MODE_PROGRAM);
     byte configCommand[] = {0xC1, 0x00, 0x06};
@@ -560,210 +759,6 @@ void E220::printBoardParmeters() {
     }
 }
 
-/**
- * Function used to set the channel between 0-80 in register 4
- * @param {int} newChannel the new channel
- * @param {bool} Set this as a non-volatile parameter
- * @return {bool} the success factor
- */
-bool E220::setChannel(int newChannel, bool permanent) {
-    if(newChannel < 0 | newChannel > 83){
-        Serial.print("Channel out of range 0-83");
-        return false;
-    }
-    else{
-        uint8_t registerParams[] = {static_cast<uint8_t>(newChannel)};
-        if(permanent){
-            if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
-                return false;
-            }
-        }
-        else{
-            if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
-                return false;
-            }
-        }
-        _channel = newChannel;
-        return true;
-    }
-}
-
-/**
- * getter for the channel parameter
- * @return {int} The channel
- */
-int E220::getChannel() {
-    return _channel;
-}
-
-/**
- * Setter for the RSSIByte toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
- * @return {bool} the success factor
- */
-bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
-    uint8_t toggle = 0b0;
-    if(Setting){toggle = 0b1;}
-    uint8_t finalByte = toggle << 7;
-    finalByte = finalByte | (_transmissionMethod << 6);
-    //finalByte = finalByte | (0 << 5);
-    finalByte = finalByte | (_LBTSetting << 4);
-    //finalByte = finalByte | (0 << 3);
-    finalByte = finalByte | _WORCycle;
-    uint8_t registerParams[] = {finalByte};
-    if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    _RSSIByte = Setting;
-    return true;
-}
-
-/**
- * getter for the RSSIByte toggle
- * @return {int} The RSSIByte toggle
- */
-bool E220::getRSSIByteToggle() {
-    return _RSSIByte;
-}
-
-/**
- * Setter for the TransmissionMode toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
- * @return {bool} the success factor
- */
-bool E220::setFixedTransimission(bool Setting, bool permanent) {
-    uint8_t toggle = 0b0;
-    if(Setting){toggle = 0b1;}
-
-    uint8_t finalByte = _RSSIByte << 7;
-    finalByte = finalByte | (toggle << 6);
-    //finalByte = finalByte | (0 << 5);
-    finalByte = finalByte | (_LBTSetting << 4);
-    //finalByte = finalByte | (0 << 3);
-    finalByte = finalByte | _WORCycle;
-    uint8_t registerParams[] = {finalByte};
-    if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    _transmissionMethod = Setting;
-    return true;
-
-}
-/**
- * getter for the Transmission Method
- * @return {int} The transmission method
- */
-bool E220::getFixedTransmission() {
-    return _transmissionMethod;
-}
-
-/**
- * Setter for the LBT toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
- * @return {bool} the success factor
- */
-bool E220::setLBT(bool Setting, bool permanent) {
-    uint8_t toggle = 0b0;
-    if(Setting){toggle = 0b1;}
-
-    uint8_t finalByte = _RSSIByte << 7;
-    finalByte = finalByte | (_transmissionMethod << 6);
-    //finalByte = finalByte | (0 << 5);
-    finalByte = finalByte | (toggle << 4);
-    //finalByte = finalByte | (0 << 3);
-    finalByte = finalByte | _WORCycle;
-    uint8_t registerParams[] = {finalByte};
-    if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    _LBTSetting = Setting;
-    return true;
-}
-
-/**
- * getter for the LBT Setting
- * @return {int} The LBT Setting
- */
-bool E220::getLBT() {
-    return _LBTSetting;
-}
-
-/**
- * Setter for the WOR Cycle setting
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
- * @return {bool} the success factor
- */
-bool E220::setWORCycle(uint8_t WORSetting, bool permanent) {
-    uint8_t finalByte = _RSSIByte << 7;
-    finalByte = finalByte | (_transmissionMethod << 6);
-    //finalByte = finalByte | (0 << 5);
-    finalByte = finalByte | (_LBTSetting << 4);
-    //finalByte = finalByte | (0 << 3);
-    finalByte = finalByte | WORSetting;
-    uint8_t registerParams[] = {finalByte};
-    if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
-            return false;
-        }
-    }
-    _WORCycle = WORSetting;
-    return true;
-}
-/**
- * getter for the Wor Cycle
- * @return {int} The WOR Cycle
- */
-int E220::getWORCycle() {
-    switch(_WORCycle){
-        case 0b000:
-            return 500;
-        case 0b001:
-            return 1000;
-        case 0b010:
-            return 1500;
-        case 0b011:
-            return 2000;
-        case 0b100:
-            return 2500;
-        case 0b101:
-            return 3000;
-        case 0b110:
-            return 3500;
-        case 0b111:
-            return 4000;
-
-    }
-}
 
 
 

@@ -1,6 +1,9 @@
-//
-// Created by connor on 15/11/2021.
-//
+/**
+ *  Simple library used for the configuration of EBYTE E220 modules
+ *  @author Connor Kirkpatrick
+ *  @date 15/11/2021
+ *  @cite https://github.com/KrisKasprzak/EBYTE
+ */
 
 #ifndef E220LIB_E220_H
 #define E220LIB_E220_H
@@ -180,10 +183,6 @@ class E220 {
 
         bool setWORCycle(uint8_t WORSetting, bool permanent);
         int getWORCycle();
-
-
-
-
 
         void printBoardParmeters();
 
