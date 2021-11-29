@@ -7,7 +7,7 @@
 #define aux_3 10
 
 #include "Arduino.h"
-#include "E220.h"
+#include "../E220.h"
 
 //running tx/rx on Serial 3
 void readData() ;
