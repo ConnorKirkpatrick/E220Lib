@@ -175,7 +175,7 @@ class E220 {
         bool setRSSIByteToggle(bool Setting, bool permanent);
         bool getRSSIByteToggle();
 
-        bool setFixedTransimission(bool Setting, bool permanent);
+        bool setFixedTransmission(bool Setting, bool permanent);
         bool getFixedTransmission();
 
         bool setLBT(bool Setting, bool permanent);
@@ -184,7 +184,11 @@ class E220 {
         bool setWORCycle(uint8_t WORSetting, bool permanent);
         int getWORCycle();
 
+        bool setEncryptionKey(unsigned char key, bool permanent);
+
         void printBoardParmeters();
+
+
 
 
 };

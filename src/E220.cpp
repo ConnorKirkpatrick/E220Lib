@@ -555,7 +555,7 @@ bool E220::getRSSIByteToggle() {
  * @param {bool} permanent Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
-bool E220::setFixedTransimission(bool Setting, bool permanent) {
+bool E220::setFixedTransmission(bool Setting, bool permanent) {
     uint8_t toggle = 0b0;
     if(Setting){toggle = 0b1;}
 
@@ -673,7 +673,31 @@ int E220::getWORCycle() {
 
     }
 }
-
+/**
+ * Method used to set the encryption key for transmission
+ * @param {unsigned char} key The encryption key
+ * @param {bool} permanent Set this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setEncryptionKey(unsigned char key, bool permanent) {
+    //convert key to hex
+    uint16_t registerParams[] = {static_cast<uint16_t>(key)};
+    uint16_t combinedKey = key;
+    uint8_t keyH = ((combinedKey & 0xFFFF) >> 8);
+    uint8_t keyL = (combinedKey & 0xFF);
+    uint8_t keys[] = {keyH, keyL};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x06, 0x02, keys)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x06, 0x02, keys)){
+            return false;
+        }
+    }
+    return true;
+}
 
 /**
  * Method used to print the raw parameters from the module, mainly used for sanity checking
