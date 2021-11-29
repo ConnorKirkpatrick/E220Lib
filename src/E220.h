@@ -5,33 +5,14 @@
  *  @cite https://github.com/KrisKasprzak/EBYTE
  */
 
-#ifndef E220LIB_E220_H
-#define E220LIB_E220_H
-
-
 //Define all my constants
 
 #include <Stream.h>
-
-//write data as byte array: command byte, starting address, write-length, parameter
-//returns identical, except command byte swaps from c0 to c1
-//#define writePermenant 0xC0
-
-//Read data as byte array: command byte, starting address, read-length
-//returns identical and then the parameters
-//#define read 0xC1
-
-//command byte, starting address, write-length, parameter
-//returns identical, except command byte swaps from c0 to c1
-//#define writeTemp 0xC2
 
 #define MODE_NORMAL 0			// can send and receive data
 #define MODE_WOR_SENDING 1	    // sends a preamble to waken receiver
 #define MODE_WOR_RECEIVE 2		// can't transmit, Can only receive from transmitter in mode 1. System only checks for incoming every WOR cycle
 #define MODE_PROGRAM 3          // Power saving mode, also used to change the parameters of the device
-
-#define PERMANENT 0xC0          // Will set a given parameter in a non volatile register
-#define TEMPORARY 0xC2          // Will set a given parameter in a volatile register
 
 //Registers 0 and 1 reserved for the module address
 //65536 possible addresses
@@ -80,6 +61,7 @@
 #define Power_21 0b11       //21dBm
 
 //Register 4 reserved for the channel
+//16 bits of data for the channel
 
 //Register 5
 //RSSI Byte
@@ -106,10 +88,7 @@
 
 //Register 6
 //cryptoKey high and low, the two halves of the crypto key
-
-
-
-
+//16 bits for the total key
 
 class Stream;
 
@@ -139,9 +118,7 @@ class E220 {
 
     bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
 
-
     public:
-
         E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
 
         bool init();
@@ -187,11 +164,4 @@ class E220 {
         bool setEncryptionKey(unsigned char key, bool permanent);
 
         void printBoardParmeters();
-
-
-
-
 };
-
-
-#endif //E220LIB_E220_H
