@@ -92,14 +92,14 @@
 #define LBT_E 0b01          //LBT Enabled, system will monitor the channel to try to avoid interference when transmitting, can cause delays of upto 2 seconds max
 
 //WOR Cycle
-#define FiveHundred 0b000                    //WOR cycle awake every 500ms
-#define oneThousand 0b001                    //WOR cycle awake every 1000ms
-#define oneThousandFiveHundred 0b010         //WOR cycle awake every 1500ms
-#define twoThousand 0b011                    //WOR cycle awake every 2000ms
-#define twoThousandFiveHundred 0b100         //WOR cycle awake every 2500ms
-#define threeThousand 0b101                  //WOR cycle awake every 3000ms
-#define threeThousandFiveHundred 0b110       //WOR cycle awake every 3500ms
-#define fourThousand 0b111                   //WOR cycle awake every 4000ms
+#define WOR500 0b000        //WOR cycle awake every 500ms
+#define WOR1000 0b001       //WOR cycle awake every 1000ms
+#define WOR1500 0b010       //WOR cycle awake every 1500ms
+#define WOR2000 0b011       //WOR cycle awake every 2000ms
+#define WOR2500 0b100       //WOR cycle awake every 2500ms
+#define WOR3000 0b101       //WOR cycle awake every 3000ms
+#define WOR3500 0b110       //WOR cycle awake every 3500ms
+#define WOR4000 0b111       //WOR cycle awake every 4000ms
 
 //Register 6
 //cryptoKey high and low, the two halves of the crypto key
