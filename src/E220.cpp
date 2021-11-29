@@ -5,7 +5,6 @@
 #include "E220.h"
 
 #include "Stream.h"
-#include "UARTClass.h"
 
 #if ARDUINO >= 100
 #include "Arduino.h"
@@ -66,6 +65,7 @@ void E220::setMode(uint8_t mode){
         case MODE_NORMAL:
             digitalWrite(_M0, LOW);
             digitalWrite(_M1, LOW);
+            Serial.println("Mode normal");
             break;
         case MODE_WOR_SENDING:
             digitalWrite(_M0, HIGH);
@@ -78,6 +78,7 @@ void E220::setMode(uint8_t mode){
         case MODE_PROGRAM:
             digitalWrite(_M0, HIGH);
             digitalWrite(_M1, HIGH);
+            Serial.println("Mode Program");
             break;
         default:
             digitalWrite(_M0, LOW);
@@ -89,7 +90,7 @@ void E220::setMode(uint8_t mode){
 
 /**
  * Method reads all the default parameters from the module and updates the global values representing these
- * @return  boolean represening if the read was successful, true for success
+ * @return  boolean representing if the read was successful, true for success
  */
 bool E220::readBoardData(){
     setMode(MODE_PROGRAM);
@@ -98,6 +99,9 @@ bool E220::readBoardData(){
     _streamSerial->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
+        Serial.println(_Params[0], HEX);
+        Serial.println(_Params[1], HEX);
+        Serial.println(_Params[2], HEX);
         Serial.println("Error reading module config, check the wiring");
         setMode(_setting);
         return false;
@@ -468,6 +472,7 @@ int E220::getPower() {
             return 24;
         case 0b11:
             return 21;
+
     }
 }
 
@@ -551,6 +556,7 @@ void E220::printBoardParmeters() {
         Serial.println(_LBTSetting, BIN);
         Serial.print("WOR Cycle setting: ");
         Serial.println(_WORCycle, HEX);
+        setMode(_setting);
     }
 }
 
@@ -561,8 +567,8 @@ void E220::printBoardParmeters() {
  * @return {bool} the success factor
  */
 bool E220::setChannel(int newChannel, bool permanent) {
-    if(newChannel < 0 | newChannel > 80){
-        Serial.print("Channel out of range 0-80");
+    if(newChannel < 0 | newChannel > 83){
+        Serial.print("Channel out of range 0-83");
         return false;
     }
     else{

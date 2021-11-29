@@ -9,7 +9,6 @@
 //Define all my constants
 
 #include <Stream.h>
-#include <UARTClass.h>
 
 //write data as byte array: command byte, starting address, write-length, parameter
 //returns identical, except command byte swaps from c0 to c1
