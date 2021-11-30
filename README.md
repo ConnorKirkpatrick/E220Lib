@@ -82,7 +82,3 @@ WOR2500 : WOR cycle awake every 2500ms\
 WOR3000 : WOR cycle awake every 3000ms\
 WOR3500 : WOR cycle awake every 3500ms\
 WOR4000 : WOR cycle awake every 4000ms
-
-
-
-
