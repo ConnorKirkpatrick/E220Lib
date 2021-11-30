@@ -2,7 +2,6 @@
  *  Simple library used for the configuration of EBYTE E220 modules
  *  @author Connor Kirkpatrick
  *  @date 15/11/2021
- *  @cite https://github.com/KrisKasprzak/EBYTE
  */
 #include "E220.h"
 
