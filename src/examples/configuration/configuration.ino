@@ -17,9 +17,11 @@ void setup() {
     //receiver.begin(9600);
 
     //create our module
-    Stream &mySerial3 = (Stream &)Serial3;
-    E220 radioModule(&mySerial3, m0, m1, aux);
-    //E220 radioModule(receiver, m0, m1, aux);
+    Stream &mySerial = (Stream &)Serial3;
+    E220 radioModule(&mySerial, m0, m1, aux);
+
+    //Stream &mySerial = (Stream &)receiver;
+    //E220 radioModule(&mySerial, m0, m1, aux);
 
     //initialise the module and check it communicates with us, else loop and keep trying
     while(!radioModule.init()){
