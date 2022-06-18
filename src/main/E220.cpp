@@ -815,7 +815,20 @@ void E220::printBoardParameters() {
                 break;
         }
         Serial.print("Sub Packet Size setting: ");
-        Serial.println(_subPacketSize, BIN);
+        switch (_subPacketSize) {
+            case 0b00:
+                Serial.println("SPS_200");
+                break;
+            case 0b01:
+                Serial.println("SPS_128");
+                break;
+            case 0b10:
+                Serial.println("SPS_64");
+                break;
+            case 0b11:
+                Serial.println("SPS_32");
+                break;
+        }
         Serial.print("RSSI Ambient Noise Toggle: ");
         Serial.println(_RSSIAmbientNoise, BIN);
         Serial.print("Transmission Power: ");
