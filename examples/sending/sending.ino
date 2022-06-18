@@ -18,7 +18,9 @@ void setup(){
     //initiate the radio module
     Stream &mySerial = (Stream &)Serial3;
     E220 radioModule(&mySerial, m0, m1, aux);
-    //E220 radioModule(receiver, m0, m1, aux);
+
+    //Stream &mySerial = (Stream &)receiver;
+    //E220 radioModule(&mySerial, m0, m1, aux);
 
     //initialise the module and check it communicates with us, else loop and keep trying
     while(!radioModule.init()){
@@ -32,8 +34,8 @@ void loop(){
     if(Serial.available()){
         //parse the serial message into a string and send it out to the module
         String message = Serial.readString();;
-        Serial3.print(message);
-        Serial3.flush();
+        mySerial.print(message);
+        mySerial.flush();
         //output confirmation to the user that we have sent their message
         Serial.print("Sent: ");
         Serial.println(message);

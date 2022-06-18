@@ -162,5 +162,5 @@ class E220 {
 
         bool setEncryptionKey(unsigned char key, bool permanent);
 
-        void printBoardParmeters();
+        void printBoardParameters();
 };

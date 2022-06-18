@@ -699,7 +699,7 @@ bool E220::setEncryptionKey(unsigned char key, bool permanent) {
 /**
  * Method used to print the raw parameters from the module, mainly used for sanity checking
  */
-void E220::printBoardParmeters() {
+void E220::printBoardParameters() {
     setMode(MODE_PROGRAM);
     byte configCommand[] = {0xC1, 0x00, 0x06};
     _streamSerial->write(configCommand, sizeof(configCommand));
@@ -710,7 +710,8 @@ void E220::printBoardParmeters() {
         setMode(_setting);
     }
     else{
-        //print the raw output
+        //print the raw output for debug
+        /*
         Serial.println("Raw Data:");
         Serial.println("HEX/BINARY/DECIMAL");
         for(int i = 0; i < sizeof _Params; i++){
@@ -721,6 +722,7 @@ void E220::printBoardParmeters() {
             Serial.println(_Params[i], DEC);
         }
         Serial.println("");
+         */
         //values in register 0&1
         _address =  (_Params[3] << 8) | (_Params[4]);
         //values in register 2
@@ -755,27 +757,160 @@ void E220::printBoardParmeters() {
         Serial.print("Address: ");
         Serial.println(_address);
         Serial.print("Baud Rate setting: ");
-        Serial.println(_baudRate, BIN);
+        switch (_baudRate) {
+            case 0b000:
+                Serial.println("UDR_1200");
+                break;
+            case 0b001:
+                Serial.println("UDR_2400");
+                break;
+            case 0b010:
+                Serial.println("UDR_4800");
+                break;
+            case 0b011:
+                Serial.println("UDR_9600");
+                break;
+            case 0b100:
+                Serial.println("UDR_19200");
+                break;
+            case 0b101:
+                Serial.println("UDR_38400");
+                break;
+            case 0b110:
+                Serial.println("UDR_57600");
+                break;
+            case 0b111:
+                Serial.println("UDR_115200");
+                break;
+        }
         Serial.print("Parity Bit setting: ");
-        Serial.println(_parityBit, BIN);
+        switch (_parityBit) {
+            case 0b00:
+                Serial.println("PB_8N1");
+                break;
+            case 0b01:
+                Serial.println("PB_8O1");
+                break;
+            case 0b11:
+                Serial.println("PB_8E1");
+                break;
+        }
         Serial.print("Air Data Rate setting: ");
-        Serial.println(_airDataRate, BIN);
+        switch (_airDataRate) {
+            case 0b010:
+                Serial.println("ADR_2400");
+                break;
+            case 0b011:
+                Serial.println("ADR_4800");
+                break;
+            case 0b100:
+                Serial.println("ADR_9600");
+                break;
+            case 0b101:
+                Serial.println("ADR_19200");
+                break;
+            case 0b110:
+                Serial.println("ADR_38400");
+                break;
+            case 0b111:
+                Serial.println("ADR_62500");
+                break;
+        }
         Serial.print("Sub Packet Size setting: ");
-        Serial.println(_subPacketSize, BIN);
+        switch (_subPacketSize) {
+            case 0b00:
+                Serial.println("SPS_200");
+                break;
+            case 0b01:
+                Serial.println("SPS_128");
+                break;
+            case 0b10:
+                Serial.println("SPS_64");
+                break;
+            case 0b11:
+                Serial.println("SPS_32");
+                break;
+        }
         Serial.print("RSSI Ambient Noise Toggle: ");
-        Serial.println(_RSSIAmbientNoise, BIN);
+        switch (_subPacketSize) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("Transmission Power: ");
-        Serial.println(_transmitPower, BIN);
+        switch (_transmitPower) {
+            case 0b00:
+                Serial.println("Power_30");
+                break;
+            case 0b01:
+                Serial.println("Power_27");
+                break;
+            case 0b10:
+                Serial.println("Power_24");
+                break;
+            case 0b11:
+                Serial.println("Power_21");
+                break;
+        }
         Serial.print("Channel: ");
         Serial.println(_channel);
         Serial.print("RSSI Byte Toggle: ");
-        Serial.println(_RSSIByte, BIN);
-        Serial.print("Transmission Mode Toggle (Fixed = 1): ");
-        Serial.println(_transmissionMethod, BIN);
+        switch (_RSSIByte) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
+        Serial.print("Transmission Mode Toggle: ");
+        switch (_transmissionMethod) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("LBT Monitoring Toggle: ");
-        Serial.println(_LBTSetting, BIN);
+        switch (_LBTSetting) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("WOR Cycle setting: ");
-        Serial.println(_WORCycle, HEX);
+        switch (_WORCycle) {
+            case 0b000:
+                Serial.println("WOR500");
+                break;
+            case 0b001:
+                Serial.println("WOR1000");
+                break;
+            case 0b010:
+                Serial.println("WOR1500");
+                break;
+            case 0b011:
+                Serial.println("WOR2000");
+                break;
+            case 0b100:
+                Serial.println("WOR2500");
+                break;
+            case 0b101:
+                Serial.println("WOR3000");
+                break;
+            case 0b110:
+                Serial.println("WOR3500");
+                break;
+            case 0b111:
+                Serial.println("WOR4000");
+                break;
+        }
         setMode(_setting);
     }
 }
