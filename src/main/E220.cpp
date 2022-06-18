@@ -856,13 +856,59 @@ void E220::printBoardParameters() {
         Serial.print("Channel: ");
         Serial.println(_channel);
         Serial.print("RSSI Byte Toggle: ");
-        Serial.println(_RSSIByte, BIN);
+        switch (_RSSIByte) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("Transmission Mode Toggle (Fixed = 1): ");
-        Serial.println(_transmissionMethod, BIN);
+        switch (_transmissionMethod) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("LBT Monitoring Toggle: ");
-        Serial.println(_LBTSetting, BIN);
+        switch (_LBTSetting) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("WOR Cycle setting: ");
-        Serial.println(_WORCycle, HEX);
+        switch (_WORCycle) {
+            case 0b000:
+                Serial.println("WOR500");
+                break;
+            case 0b001:
+                Serial.println("WOR1000");
+                break;
+            case 0b010:
+                Serial.println("WOR1500");
+                break;
+            case 0b011:
+                Serial.println("WOR2000");
+                break;
+            case 0b100:
+                Serial.println("WOR2500");
+                break;
+            case 0b101:
+                Serial.println("WOR3000");
+                break;
+            case 0b110:
+                Serial.println("WOR3500");
+                break;
+            case 0b111:
+                Serial.println("WOR4000");
+                break;
+        }
         setMode(_setting);
     }
 }
