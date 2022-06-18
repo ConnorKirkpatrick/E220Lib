@@ -710,7 +710,8 @@ void E220::printBoardParameters() {
         setMode(_setting);
     }
     else{
-        //print the raw output
+        //print the raw output for debug
+        /*
         Serial.println("Raw Data:");
         Serial.println("HEX/BINARY/DECIMAL");
         for(int i = 0; i < sizeof _Params; i++){
@@ -721,6 +722,7 @@ void E220::printBoardParameters() {
             Serial.println(_Params[i], DEC);
         }
         Serial.println("");
+         */
         //values in register 0&1
         _address =  (_Params[3] << 8) | (_Params[4]);
         //values in register 2
@@ -864,7 +866,7 @@ void E220::printBoardParameters() {
                 Serial.println("Enabled");
                 break;
         }
-        Serial.print("Transmission Mode Toggle (Fixed = 1): ");
+        Serial.print("Transmission Mode Toggle: ");
         switch (_transmissionMethod) {
             case 0b00:
                 Serial.println("Disabled");
