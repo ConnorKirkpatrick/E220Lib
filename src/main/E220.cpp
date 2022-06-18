@@ -794,7 +794,26 @@ void E220::printBoardParameters() {
                 break;
         }
         Serial.print("Air Data Rate setting: ");
-        Serial.println(_airDataRate, BIN);
+        switch (_airDataRate) {
+            case 0b010:
+                Serial.println("ADR_2400");
+                break;
+            case 0b011:
+                Serial.println("ADR_4800");
+                break;
+            case 0b100:
+                Serial.println("ADR_9600");
+                break;
+            case 0b101:
+                Serial.println("ADR_19200");
+                break;
+            case 0b110:
+                Serial.println("ADR_38400");
+                break;
+            case 0b111:
+                Serial.println("ADR_62500");
+                break;
+        }
         Serial.print("Sub Packet Size setting: ");
         Serial.println(_subPacketSize, BIN);
         Serial.print("RSSI Ambient Noise Toggle: ");
