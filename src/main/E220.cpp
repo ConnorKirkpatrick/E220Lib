@@ -830,9 +830,29 @@ void E220::printBoardParameters() {
                 break;
         }
         Serial.print("RSSI Ambient Noise Toggle: ");
-        Serial.println(_RSSIAmbientNoise, BIN);
+        switch (_subPacketSize) {
+            case 0b00:
+                Serial.println("Disabled");
+                break;
+            case 0b01:
+                Serial.println("Enabled");
+                break;
+        }
         Serial.print("Transmission Power: ");
-        Serial.println(_transmitPower, BIN);
+        switch (_transmitPower) {
+            case 0b00:
+                Serial.println("Power_30");
+                break;
+            case 0b01:
+                Serial.println("Power_27");
+                break;
+            case 0b10:
+                Serial.println("Power_24");
+                break;
+            case 0b11:
+                Serial.println("Power_21");
+                break;
+        }
         Serial.print("Channel: ");
         Serial.println(_channel);
         Serial.print("RSSI Byte Toggle: ");
