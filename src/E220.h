@@ -6,7 +6,7 @@
 
 //Define all my constants
 
-#include <Stream.h>
+#include "USB/USBAPI.h"
 
 #define MODE_NORMAL 0			// can send and receive data
 #define MODE_WOR_SENDING 1	    // sends a preamble to waken receiver
@@ -89,7 +89,6 @@
 //cryptoKey high and low, the two halves of the crypto key
 //16 bits for the total key
 
-class Stream;
 
 class E220 {
     private:
@@ -98,7 +97,7 @@ class E220 {
     int _M1;
     int _AUX;
 
-    Stream* _streamSerial;
+    Serial_ *_streamSerial;
     uint8_t _Params[9];
     uint8_t _setting;
 
@@ -115,10 +114,12 @@ class E220 {
     uint8_t _LBTSetting;
     uint8_t _WORCycle;
 
+    char escapeCharacter = '\n';
+
     bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
 
     public:
-        E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
+        E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX);
 
         bool init();
         void setMode(uint8_t mode);
@@ -163,4 +164,16 @@ class E220 {
         bool setEncryptionKey(unsigned char key, bool permanent);
 
         void printBoardParameters();
+
+        bool setEscapeCharacter(char character);
+        uint8_t getEscapeCharacter();
+
+        bool sendTransparentData(String data);
+        bool sendTransparentData(uint8_t *data, int size);
+
+        bool sendFixedData(int address, int channel, String data, bool auxAvailable);
+        bool sendFixedData(int address, int channel, uint8_t *data, int size, bool auxAvailable);
+
+        String receiveData();
+        bool receiveData(uint8_t* data, int size);
 };

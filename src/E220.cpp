@@ -5,8 +5,6 @@
  */
 #include "E220.h"
 
-#include "Stream.h"
-
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -21,7 +19,7 @@
  * @param PIN_M1 The digital pin connected to pin M1 on the module
  * @param PIN_AUX The digital pin connected to pin AUX on the module
  */
-E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
+E220::E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX){
     _streamSerial = s;
     _M0 = PIN_M0;
     _M1 = PIN_M1;
@@ -171,8 +169,8 @@ bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8
 }
 /**
  * Used to change the radio address of the module
- * @param newAddress new address in range 0-65535
- * @param permanent Set this as a non-volatile parameter
+ * @param newAddress {int} new address in range 0-65535
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean represent the successful parameter change
  */
 bool E220::setAddress(int newAddress, bool permanent) {
@@ -209,8 +207,8 @@ uint16_t E220::getAddress() {
 
 /**
  * Used to set the Baud rate of the module Serial communication
- * @param newUART New baud rate to set
- * @param permanent Set this as a non-volatile parameter
+ * @param newUART {UDR_*} New baud rate to set
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
 bool E220::setBaud(uint8_t newUART, bool permanent){
@@ -259,8 +257,8 @@ int E220::getBaud(){
 }
 /**
  * Used to change the Serial parity bit of the module
- * @param newParity The new parity bit code
- * @param permanent Set this as a non-volatile parameter
+ * @param newParity {PB_*} The new parity bit code
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
 bool E220::setParity(uint8_t newParity, bool permanent) {
@@ -301,8 +299,8 @@ String E220::getParity() {
 /**
  * Used to set the Air data rate (transmission rate) of the module
  * Higher rates mean lower ranges
- * @param newAirData The new air data rate
- * @param permanent Set this as a non-volatile parameter
+ * @param newAirData {ADR_*} The new air data rate
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
 bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
@@ -353,8 +351,8 @@ int E220::getAirDataRate() {
 
 /**
  * Used to set the sub packet size of the module
- * @param newSize
- * @param permanent Set this as a non-volatile parameter
+ * @param newSize {SPS_*} The new size of the subpackets when divided
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
 bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
@@ -396,7 +394,7 @@ int E220::getSubPacketSize() {
 
 /**
  * Used to set the RSSI Ambient Noise registers of the module in normal mode
- * @param ambientSetting The desired setting of the Ambient noise setting
+ * @param ambientSetting {RAN_*} The desired setting of the Ambient noise setting
  * @param permanent Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
@@ -431,8 +429,8 @@ uint8_t E220::getRSSIAmbient() {
 /**
  * Used to set the broadcast power of the module
  * Higher power equates to greater range but greater power draw
- * @param ambientSetting The desired power setting
- * @param permanent Set this as a non-volatile parameter
+ * @param ambientSetting {Power_*} The desired power setting
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean success parameter
  */
 bool E220::setPower(uint8_t newPower, bool permanent) {
@@ -476,8 +474,8 @@ int E220::getPower() {
 
 /**
  * Function used to set the channel between 0-80 in register 4
- * @param {int} newChannel the new channel
- * @param {bool} Set this as a non-volatile parameter
+ * @param newChannel {int} the new channel
+ * @param permanent {bool} this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setChannel(int newChannel, bool permanent) {
@@ -512,8 +510,8 @@ int E220::getChannel() {
 
 /**
  * Setter for the RSSIByte toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
+ * @param setting {bool} The desired setting
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
@@ -548,8 +546,8 @@ bool E220::getRSSIByteToggle() {
 
 /**
  * Setter for the TransmissionMode toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
+ * @param setting {bool} The desired setting
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setFixedTransmission(bool Setting, bool permanent) {
@@ -585,8 +583,8 @@ bool E220::getFixedTransmission() {
 
 /**
  * Setter for the LBT toggle
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
+ * @param setting {bool} The desired setting
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setLBT(bool Setting, bool permanent) {
@@ -622,8 +620,8 @@ bool E220::getLBT() {
 
 /**
  * Setter for the WOR Cycle setting
- * @param {bool} Setting The desired setting
- * @param {bool} permanent Set this as a non-volatile parameter
+ * @param Setting {bool} The desired setting
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setWORCycle(uint8_t WORSetting, bool permanent) {
@@ -672,8 +670,8 @@ int E220::getWORCycle() {
 }
 /**
  * Method used to set the encryption key for transmission
- * @param {unsigned char} key The encryption key
- * @param {bool} permanent Set this as a non-volatile parameter
+ * @param key {unsigned char} The encryption key
+ * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
 bool E220::setEncryptionKey(unsigned char key, bool permanent) {
@@ -914,6 +912,179 @@ void E220::printBoardParameters() {
         setMode(_setting);
     }
 }
+/**
+ * Used to set the escape character that is used to denote the end of a message
+ * @param character {char} the character to set
+ * @return {bool} true upon success
+ */
+bool E220::setEscapeCharacter(char character) {
+  escapeCharacter = character;
+  return true;
+}
+/**
+ * getter used to check the currently set escape character
+ * @return {uint8_t} the escape character
+ */
+uint8_t E220::getEscapeCharacter() {
+  return escapeCharacter;
+}
+
+/**
+ * Function used to send string data in a transparent way. The module must
+ * either not be in fixed transmission mode or have a broadcast address of
+ * 0xFFFF. The set escape character will be automatically added.
+ * @param data {String} The string object to send
+ * @return {bool} returns false if an error occurs
+ */
+bool E220::sendTransparentData(String data) {
+  if(!getFixedTransmission() || getAddress() == 0xFFFF) {
+    _streamSerial->print(data+escapeCharacter);
+    return true;
+  }
+  else{
+    Serial.println("Not in transparent mode, set fixedTransmission to false or address to 0xFFFF");
+    return false;
+  }
+}
+
+/**
+ * Function used to send a byte array in a transparent way. The module must
+ * either not be in fixed transmission mode or have a broadcast address of
+ * 0xFFFF. The set escape character will be automatically added.
+ * @param data {uint8_t *}The byte array to send
+ * @param size {int} The size of the array
+ * @return {bool} returns false if an error occurs
+ */
+bool E220::sendTransparentData(uint8_t *data, int size) {
+  if(!getFixedTransmission() || getAddress() == 0xFFFF) {
+    for(int i = 0; i < size; i++){
+      _streamSerial->write(data[i]);
+    }
+    _streamSerial->write(escapeCharacter);
+    return true;
+  }
+  else{
+    Serial.println("Not in transparent mode, set fixedTransmission to false or address to 0xFFFF");
+    return false;
+  }
+}
+
+/**
+ * Function used to send data to a fixed address or channel. Requires the module
+ * to be in fixed transmission mode. The device needs to be given an address and
+ * channel to broadcast to. The first 3 bytes of the data sent to the module
+ * represent the address and channel. The auxAvailable flag is used to show if
+ * the aux port is connected, and thus if it can be used for timing control.
+ * @param address {int} The address of the targeted device. Can be broadcast
+ * address (OxFFFF)
+ * @param channel {int} The channel for the targeted transmission.
+ * @param data  {String} The string of data to send
+ * @param auxAvailable {bool} Flag used to enable of disable auxiliary timing
+ * control
+ * @return {bool} returns false if an error occurs
+ */
+bool E220::sendFixedData(int address, int channel, String data, bool auxAvailable) {
+  if(address > 65535 | address < 0){
+    Serial.println("Address out of range");
+    return false;
+  }
+  if(channel > 80 | channel < 0){
+    Serial.println("Channel out of range");
+    return false;
+  }
+  if(!getFixedTransmission()){
+    Serial.println("Not in fixed transmission mode");
+    return false;
+  }
+  if(auxAvailable) {
+    // pause if data is still being sent to ensure this is read as a new message
+    while (digitalRead(_AUX) == LOW) {
+      delay(10);
+    }
+  }
+  uint8_t message[data.length()+4];
+  message[0] = highByte(address);
+  message[1] = lowByte(address);
+  message[2] = (uint8_t) channel;
+  memcpy(&message[3],data.c_str(),data.length());
+  message[data.length()+3] = escapeCharacter;
+  _streamSerial->write(message,data.length()+4);
+  return true;
+}
+
+/**
+ * Function used to send data to a fixed address or channel. Requires the module
+ * to be in fixed transmission mode. The device needs to be given an address and
+ * channel to broadcast to. The first 3 bytes of the data sent to the module
+ * represent the address and channel. The auxAvailable flag is used to show if
+ * the aux port is connected, and thus if it can be used for timing control.
+ * @param address {int} The address of the targeted device. Can be broadcast
+ * address (OxFFFF)
+ * @param channel {int} The channel for the targeted transmission.
+ * @param data {uint8_t*} The array of data to send
+ * @param size {int} The size of the array of data
+ * @param auxAvailable {bool} Flag used to enable of disable auxiliary timing
+ * control
+ * @return {bool} returns false if an error occurs
+ */
+bool E220::sendFixedData(int address, int channel, uint8_t *data, int size, bool auxAvailable) {
+  if(address > 65535 | address < 0){
+    Serial.println("Address out of range");
+    return false;
+  }
+  if(channel > 80 | channel < 0){
+    Serial.println("Channel out of range");
+    return false;
+  }
+  if(!getFixedTransmission()){
+    Serial.println("Not in fixed transmission mode");
+    return false;
+  }
+  if(auxAvailable) {
+    // pause if data is still being sent to ensure this is read as a new message
+    while (digitalRead(_AUX) == LOW) {
+      delay(10);
+    }
+  }
+  uint8_t message[size+4];
+  message[0] = highByte(address);
+  message[1] = lowByte(address);
+  message[2] = (uint8_t) channel;
+  memcpy(&message[3],data,size);
+  message[size+3] = escapeCharacter;
+  _streamSerial->write(message,size+4);
+  return true;
+}
+
+/**
+ * Function used to read a string of data from the radio module upto the first
+ * instance of the escape character.
+ * @return {String} The data from the module.
+ */
+String E220::receiveData() {
+  if(_streamSerial->available()){
+    return _streamSerial->readStringUntil(escapeCharacter);
+  }else{
+    return "";
+  }
+}
+/**
+ * Function used to read a set of data from the radio module upto the first
+ * instance of the escape character.
+ * @param data {uint_8*} The array to write the data into
+ * @param size {int} The size of the array
+ * @return {bool} A flag representing whether data was read or not
+ */
+bool E220::receiveData(uint8_t *data, int size) {
+  if(_streamSerial->available()){
+   _streamSerial->readBytesUntil(escapeCharacter,data,size);
+   return true;
+  }
+  else{
+    return false;
+  }
+}
+
 
 
 
