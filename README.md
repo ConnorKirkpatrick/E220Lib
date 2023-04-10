@@ -10,6 +10,7 @@ I have included example sketch code to demonstrate how to utilise the Library
 
 ----------------------------------------------------------------------------------------------------------------------
 ##Usage
+
 ##Constants
 The radio module requires 3 provided constants, and 2 optional constants that enhance the capabilities of the module.
 * (Required) Serial: You must provide the constructor with a pointer to either a hardware or software serial that the module is connected to
