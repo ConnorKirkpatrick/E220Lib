@@ -106,16 +106,16 @@ WOR4000 : WOR cycle awake every 4000ms
 When the module is configured properly, you can simply use the builtin serial Read() and Write() methods to send and receive data.<br>
 I have provided a few functions built into the library to assist you in doing this:
 
-setEscapeCharacter: This method is used to set the escape character of transmissions. This is the value that the radio will read upto before returning data<br>
-getEscapeCharacter: Used to check what escape character you are using.\
-If this character is set to "", your minimum message size rises to 10 bytes from 9.\
+setEscapeCharacter(char): This method is used to set the escape character of transmissions. This is the value that the radio will read upto before returning data<br>
+getEscapeCharacter(): Used to check what escape character you are using.<br>
+If this character is set to "", your minimum message size rises to 10 bytes from 9.
 
-sendTransparentData(String): This method is used to send data when in transparent transmission mode.\
+sendTransparentData(String): This method is used to send data when in transparent transmission mode.<br>
 sendTransparentData(data,size): This method sends a byte array rather than a string.
 
 sendFixedData(address,channel,String, flag):
 This method is used to send data when in fixed mode. You must provide an integer for both the address and channel, along with a String of data.\
-The flag is used to configure timing control via the aux pin. If enabled, the device will ensure that the last broadcast is complete before sending a new packet, allowing for rapid channel or address changes.\
+The flag is used to configure timing control via the aux pin. If enabled, the device will ensure that the last broadcast is complete before sending a new packet, allowing for rapid channel or address changes.<br>
 If this is disabled, there is a chance that the next message will be appended to the first message is there is too little of a delay between the broadcasts.\
 
 sendFixedData(address,channel,data, size, flag): This method sends a byte array rather than a string.\
