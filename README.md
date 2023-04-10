@@ -36,9 +36,9 @@ We can still use a broadcast address to communicate with all devices on the targ
 ## Configuration methods:
 E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX): The constructor for the radio object. Provide the serial object in the form like "Serial_ &mySerial = (Serial_ &)Serial2;"<br> The serial provided may be a software serial type.
 
-SetAddress(address): Simply provide an integer in range 0-65535 as the address\
+SetAddress(address): Simply provide an integer in range 0-65535 as the address
 
-SetChannel(channel): Simply provide an integer in range 0-80 as the channel\
+SetChannel(channel): Simply provide an integer in range 0-80 as the channel
 
 setBaud(newBaudRate) This is the baud rate to communicate over serial with the arduino\
 UDR_1200 : 1200 baud\
@@ -73,7 +73,7 @@ SetRSSIAmbient(newRAN) This option will enable you to view environmental noise v
 RAN_D : disabled (default)\
 RAN_E : Enabled
 
-SetPower(newPower) This option changes the broadcast power of the module. Higher powers user more energy, but it is not<br> linear as the voltage converter is more efficient at higher values\
+SetPower(newPower) This option changes the broadcast power of the module. Higher powers user more energy, but it is not linear as the voltage converter is more efficient at higher values\
 Power_30 : 30dBm (Default)\
 Power_27 : 27dBm\
 Power_24 : 24dBm\
