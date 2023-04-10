@@ -116,9 +116,9 @@ sendTransparentData(data,size): This method sends a byte array rather than a str
 sendFixedData(address,channel,String, flag):
 This method is used to send data when in fixed mode. You must provide an integer for both the address and channel, along with a String of data.\
 The flag is used to configure timing control via the aux pin. If enabled, the device will ensure that the last broadcast is complete before sending a new packet, allowing for rapid channel or address changes.<br>
-If this is disabled, there is a chance that the next message will be appended to the first message is there is too little of a delay between the broadcasts.\
+If this is disabled, there is a chance that the next message will be appended to the first message is there is too little of a delay between the broadcasts.<br>
 
-sendFixedData(address,channel,data, size, flag): This method sends a byte array rather than a string.\
+sendFixedData(address,channel,data, size, flag): This method sends a byte array rather than a string.<br>
 
 receiveData(): A simple method used to check if data is received, and if so return it as a string. It will read upto the defined escapeCharacter
 receiveData(array,size): The same receive method but instead reads the data to a provided byte array. This will return true if data is read, false if not.
