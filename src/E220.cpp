@@ -173,7 +173,7 @@ bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8
  * @param permanent {bool} Set this as a non-volatile parameter
  * @return Boolean represent the successful parameter change
  */
-bool E220::setAddress(int newAddress, bool permanent) {
+bool E220::setAddress(unsigned int newAddress, bool permanent) {
     if((newAddress > 65535) | (newAddress < 0)){
         Serial.println("Address out of range");
         return false;
@@ -983,7 +983,7 @@ bool E220::sendTransparentData(uint8_t *data, int size) {
  * control
  * @return {bool} returns false if an error occurs
  */
-bool E220::sendFixedData(int address, int channel, String data, bool auxAvailable) {
+bool E220::sendFixedData(unsigned int address, int channel, String data, bool auxAvailable) {
   if(address > 65535 | address < 0){
     Serial.println("Address out of range");
     return false;
@@ -1027,7 +1027,7 @@ bool E220::sendFixedData(int address, int channel, String data, bool auxAvailabl
  * control
  * @return {bool} returns false if an error occurs
  */
-bool E220::sendFixedData(int address, int channel, uint8_t *data, int size, bool auxAvailable) {
+bool E220::sendFixedData(unsigned int address, int channel, uint8_t *data, int size, bool auxAvailable) {
   if(address > 65535 | address < 0){
     Serial.println("Address out of range");
     return false;

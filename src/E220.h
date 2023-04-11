@@ -125,7 +125,7 @@ class E220 {
         void setMode(uint8_t mode);
         bool readBoardData();
 
-        bool setAddress(int newAddress, bool permanent);
+        bool setAddress(unsigned int newAddress, bool permanent);
         uint16_t getAddress();
 
         bool setBaud(uint8_t newUART, bool permanent);
@@ -171,8 +171,8 @@ class E220 {
         bool sendTransparentData(String data);
         bool sendTransparentData(uint8_t *data, int size);
 
-        bool sendFixedData(int address, int channel, String data, bool auxAvailable);
-        bool sendFixedData(int address, int channel, uint8_t *data, int size, bool auxAvailable);
+        bool sendFixedData(unsigned int address, int channel, String data, bool auxAvailable);
+        bool sendFixedData(unsigned int address, int channel, uint8_t *data, int size, bool auxAvailable);
 
         String receiveData();
         bool receiveData(uint8_t* data, int size);
