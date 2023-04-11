@@ -6,7 +6,7 @@
 
 //Define all my constants
 
-#include "USB/USBAPI.h"
+#include "Stream.h"
 
 #define MODE_NORMAL 0			// can send and receive data
 #define MODE_WOR_SENDING 1	    // sends a preamble to waken receiver
@@ -97,7 +97,7 @@ class E220 {
     int _M1;
     int _AUX;
 
-    Serial_ *_streamSerial;
+    Stream *_streamSerial;
     uint8_t _Params[9];
     uint8_t _setting;
 
@@ -119,7 +119,7 @@ class E220 {
     bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
 
     public:
-        E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX);
+        E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
 
         bool init();
         void setMode(uint8_t mode);

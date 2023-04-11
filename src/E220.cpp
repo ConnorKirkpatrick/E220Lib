@@ -19,7 +19,7 @@
  * @param PIN_M1 The digital pin connected to pin M1 on the module
  * @param PIN_AUX The digital pin connected to pin AUX on the module
  */
-E220::E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX){
+E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
     _streamSerial = s;
     _M0 = PIN_M0;
     _M1 = PIN_M1;
