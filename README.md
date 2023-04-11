@@ -36,9 +36,9 @@ We can still use a broadcast address to communicate with all devices on the targ
 ## Configuration methods:
 E220(Serial_ *s, int PIN_M0, int PIN_M1, int PIN_AUX): The constructor for the radio object. Provide the serial object in the form like "Serial_ &mySerial = (Serial_ &)Serial2;"<br> The serial provided may be a software serial type.
 
-SetAddress(address): Simply provide an integer in range 0-65535 as the address\
+SetAddress(address): Simply provide an integer in range 0-65535 as the address
 
-SetChannel(channel): Simply provide an integer in range 0-80 as the channel\
+SetChannel(channel): Simply provide an integer in range 0-80 as the channel
 
 setBaud(newBaudRate) This is the baud rate to communicate over serial with the arduino\
 UDR_1200 : 1200 baud\
@@ -73,7 +73,7 @@ SetRSSIAmbient(newRAN) This option will enable you to view environmental noise v
 RAN_D : disabled (default)\
 RAN_E : Enabled
 
-SetPower(newPower) This option changes the broadcast power of the module. Higher powers user more energy, but it is not<br> linear as the voltage converter is more efficient at higher values\
+SetPower(newPower) This option changes the broadcast power of the module. Higher powers user more energy, but it is not linear as the voltage converter is more efficient at higher values\
 Power_30 : 30dBm (Default)\
 Power_27 : 27dBm\
 Power_24 : 24dBm\
@@ -106,19 +106,19 @@ WOR4000 : WOR cycle awake every 4000ms
 When the module is configured properly, you can simply use the builtin serial Read() and Write() methods to send and receive data.<br>
 I have provided a few functions built into the library to assist you in doing this:
 
-setEscapeCharacter: This method is used to set the escape character of transmissions. This is the value that the radio will read upto before returning data<br>
-getEscapeCharacter: Used to check what escape character you are using.\
-If this character is set to "", your minimum message size rises to 10 bytes from 9.\
+setEscapeCharacter(char): This method is used to set the escape character of transmissions. This is the value that the radio will read upto before returning data<br>
+getEscapeCharacter(): Used to check what escape character you are using.<br>
+If this character is set to "", your minimum message size rises to 10 bytes from 9.
 
-sendTransparentData(String): This method is used to send data when in transparent transmission mode.\
+sendTransparentData(String): This method is used to send data when in transparent transmission mode.<br>
 sendTransparentData(data,size): This method sends a byte array rather than a string.
 
 sendFixedData(address,channel,String, flag):
 This method is used to send data when in fixed mode. You must provide an integer for both the address and channel, along with a String of data.\
-The flag is used to configure timing control via the aux pin. If enabled, the device will ensure that the last broadcast is complete before sending a new packet, allowing for rapid channel or address changes.\
-If this is disabled, there is a chance that the next message will be appended to the first message is there is too little of a delay between the broadcasts.\
+The flag is used to configure timing control via the aux pin. If enabled, the device will ensure that the last broadcast is complete before sending a new packet, allowing for rapid channel or address changes.<br>
+If this is disabled, there is a chance that the next message will be appended to the first message is there is too little of a delay between the broadcasts.<br>
 
-sendFixedData(address,channel,data, size, flag): This method sends a byte array rather than a string.\
+sendFixedData(address,channel,data, size, flag): This method sends a byte array rather than a string.<br>
 
 receiveData(): A simple method used to check if data is received, and if so return it as a string. It will read upto the defined escapeCharacter
 receiveData(array,size): The same receive method but instead reads the data to a provided byte array. This will return true if data is read, false if not.
