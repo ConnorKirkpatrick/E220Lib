@@ -59,6 +59,9 @@ bool E220::init() {
  * @param mode The mode to swap to
  */
 void E220::setMode(uint8_t mode){
+    while(digitalRead(_AUX) == LOW){
+      delay(5); //if the AUX pin is low this means some data is still being written, don't change the module settings
+    }
     //time for the pins to recover, sheet says 2ms, 10 is safe
     delay(20);
     switch (mode) {
