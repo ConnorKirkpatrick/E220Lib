@@ -428,6 +428,29 @@ bool E220::setRSSIAmbient(uint8_t ambientSetting, bool permanent) {
 uint8_t E220::getRSSIAmbient() {
     return _RSSIAmbientNoise;
 }
+/**
+ * Function used to read the ambient and latest RSSI from the module
+ * The module must have RSSIAmbient enabled and be in either Normal or WOR SENDING mode
+ * @return {uint16_t} 2 bytes of data, high byte is the environmental noise, low byte is the most recent message RSSI
+ */
+uint16_t E220::readRSSIAmbient() {
+  if(!getRSSIAmbient()){
+    Serial.println("RSSI Ambient not enabled");
+    return 0xFFFF;
+  }
+  if(_setting != MODE_NORMAL | _setting != MODE_WOR_SENDING){
+    Serial.println("Module not in the correct mode, must be in normal or WOR sending");
+    return 0xFFFF;
+  }
+  uint8_t response[5];
+  uint8_t data[6] = {0xC0,0xC1,0xC2,0xC3,0x00,0x02};
+  _streamSerial->write(data,6);
+  _streamSerial->readBytes(response,6);
+  if(response[0] != 0xC1 | response[1] != 0x00 | response[2] != 0x02){
+    return 0xFFFF;
+  }
+  return response[4] <<8 | response[5];
+}
 
 /**
  * Used to set the broadcast power of the module
