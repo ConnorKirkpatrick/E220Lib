@@ -63,7 +63,7 @@ void E220::setMode(uint8_t mode){
       delay(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
     }
     //time for the pins to recover, sheet says 2ms, 10 is safe
-    delay(10);
+    delay(20);
     switch (mode) {
         case MODE_NORMAL:
             digitalWrite(_M0, LOW);
@@ -86,7 +86,7 @@ void E220::setMode(uint8_t mode){
             digitalWrite(_M1, LOW);
             break;
     }
-    delay(10);
+    delay(20);
 }
 
 /**
@@ -438,7 +438,7 @@ uint16_t E220::readRSSIAmbient() {
     Serial.println("RSSI Ambient not enabled");
     return 0xFFFF;
   }
-  if(_setting != MODE_NORMAL | _setting != MODE_WOR_SENDING){
+  if(_setting != MODE_NORMAL & _setting != MODE_WOR_SENDING){
     Serial.println("Module not in the correct mode, must be in normal or WOR sending");
     return 0xFFFF;
   }
