@@ -60,7 +60,7 @@ bool E220::init() {
  */
 void E220::setMode(uint8_t mode){
     while(digitalRead(_AUX) == LOW){
-      delay(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
+      delayMicroseconds(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
     }
     //time for the pins to recover, sheet says 2ms, 10 is safe
     delay(20);
@@ -87,6 +87,9 @@ void E220::setMode(uint8_t mode){
             break;
     }
     delay(20);
+    while(digitalRead(_AUX) == LOW){
+      delayMicroseconds(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
+    }
 }
 
 /**
@@ -149,14 +152,20 @@ bool E220::readBoardData(){
  * @return boolean response for the success of the write command
  */
 bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
+
     setMode(MODE_PROGRAM);
+
+
     uint8_t message[3] = {cmdParam, address, length};
     _streamSerial->write(message, sizeof message);
     _streamSerial->write(parameters, length);
 
     //validate the output
+
     uint8_t output[sizeof(message)+length];
     _streamSerial->readBytes(output, sizeof(output));
+
+
     setMode(_setting);
     if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
         return false;
@@ -431,9 +440,15 @@ uint8_t E220::getRSSIAmbient() {
 /**
  * Function used to read the ambient and latest RSSI from the module
  * The module must have RSSIAmbient enabled and be in either Normal or WOR SENDING mode
+ * Note: The module will take a reading for 1 second to determine ambient RSSI
  * @return {uint16_t} 2 bytes of data, high byte is the environmental noise, low byte is the most recent message RSSI
  */
+ //write: 0
+//read:
 uint16_t E220::readRSSIAmbient() {
+  while(digitalRead(_AUX) == LOW){
+    delayMicroseconds(1);
+  }
   if(!getRSSIAmbient()){
     Serial.println("RSSI Ambient not enabled");
     return 0xFFFF;
@@ -449,7 +464,7 @@ uint16_t E220::readRSSIAmbient() {
   if(response[0] != 0xC1 | response[1] != 0x00 | response[2] != 0x02){
     return 0xFFFF;
   }
-  return response[4] <<8 | response[5];
+  return response[3] <<8 | response[4];
 }
 
 /**
@@ -505,6 +520,7 @@ int E220::getPower() {
  * @return {bool} the success factor
  */
 bool E220::setChannel(int newChannel, bool permanent) {
+
     if(newChannel < 0 | newChannel > 83){
         Serial.print("Channel out of range 0-83");
         return false;
