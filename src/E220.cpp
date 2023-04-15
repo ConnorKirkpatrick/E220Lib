@@ -986,6 +986,7 @@ uint8_t E220::getEscapeCharacter() {
 bool E220::sendTransparentData(String data) {
   if(!getFixedTransmission() || getAddress() == 0xFFFF) {
     _streamSerial->print(data+escapeCharacter);
+    _streamSerial->flush();
     return true;
   }
   else{
@@ -1008,6 +1009,7 @@ bool E220::sendTransparentData(uint8_t *data, int size) {
       _streamSerial->write(data[i]);
     }
     _streamSerial->write(escapeCharacter);
+    _streamSerial->flush();
     return true;
   }
   else{
@@ -1056,6 +1058,7 @@ bool E220::sendFixedData(unsigned int address, int channel, String data, bool au
   memcpy(&message[3],data.c_str(),data.length());
   message[data.length()+3] = escapeCharacter;
   _streamSerial->write(message,data.length()+4);
+  _streamSerial->flush();
   return true;
 }
 
@@ -1100,6 +1103,7 @@ bool E220::sendFixedData(unsigned int address, int channel, uint8_t *data, int s
   memcpy(&message[3],data,size);
   message[size+3] = escapeCharacter;
   _streamSerial->write(message,size+4);
+  _streamSerial->flush();
   return true;
 }
 
