@@ -91,7 +91,15 @@ void E220::setMode(uint8_t mode){
       delayMicroseconds(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
     }
 }
-
+/**
+ * setRadioMode, public option to set the operating mode of the module
+ * @param mode The mode to swap to
+ */
+bool E220::setRadioMode(uint8_t mode){
+  _setting = mode;
+  setMode(_setting);
+  return true;
+}
 /**
  * Method reads all the default parameters from the module and updates the global values representing these
  * @return  boolean representing if the read was successful, true for success
@@ -152,20 +160,14 @@ bool E220::readBoardData(){
  * @return boolean response for the success of the write command
  */
 bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
-
     setMode(MODE_PROGRAM);
-
-
     uint8_t message[3] = {cmdParam, address, length};
     _streamSerial->write(message, sizeof message);
     _streamSerial->write(parameters, length);
 
     //validate the output
-
     uint8_t output[sizeof(message)+length];
     _streamSerial->readBytes(output, sizeof(output));
-
-
     setMode(_setting);
     if((output[0] != 0xC1) or (output[1] != address) or (output[2] != length)){
         return false;

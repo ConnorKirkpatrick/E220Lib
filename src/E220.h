@@ -1,8 +1,8 @@
 /**
- *  Simple library used for the configuration of EBYTE E220 modules
- *  @author Connor Kirkpatrick
- *  @date 15/11/2021
- */
+*  Simple library used for the configuration of EBYTE E220 modules
+*  @author Connor Kirkpatrick
+*  @date 15/11/2021
+*/
 
 //Define all my constants
 
@@ -91,90 +91,90 @@
 
 
 class E220 {
-    private:
+private:
 
-    int _M0;
-    int _M1;
-    int _AUX;
+ int _M0;
+ int _M1;
+ int _AUX;
 
-    Stream *_streamSerial;
-    uint8_t _Params[9];
-    uint8_t _setting;
+ Stream *_streamSerial;
+ uint8_t _Params[9];
+ uint8_t _setting;
 
-    uint16_t _address;
-    uint8_t _baudRate;
-    uint8_t _parityBit;
-    uint8_t _airDataRate;
-    uint8_t _subPacketSize;
-    uint8_t _RSSIAmbientNoise;
-    uint8_t _transmitPower;
-    uint8_t _channel;
-    uint8_t _RSSIByte;
-    uint8_t _transmissionMethod;
-    uint8_t _LBTSetting;
-    uint8_t _WORCycle;
+ uint16_t _address;
+ uint8_t _baudRate;
+ uint8_t _parityBit;
+ uint8_t _airDataRate;
+ uint8_t _subPacketSize;
+ uint8_t _RSSIAmbientNoise;
+ uint8_t _transmitPower;
+ uint8_t _channel;
+ uint8_t _RSSIByte;
+ uint8_t _transmissionMethod;
+ uint8_t _LBTSetting;
+ uint8_t _WORCycle;
 
-    char escapeCharacter = '\n';
+ char escapeCharacter = '\n';
 
-    bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
+ bool writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t parameters[]);
+ void setMode(uint8_t mode);
 
-    public:
-        E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
+public:
+ E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX);
 
-        bool init();
-        void setMode(uint8_t mode);
-        bool readBoardData();
+ bool init();
+ bool setRadioMode(uint8_t mode);
+ bool readBoardData();
 
-        bool setAddress(unsigned int newAddress, bool permanent);
-        uint16_t getAddress();
+ bool setAddress(int newAddress, bool permanent);
+ uint16_t getAddress();
 
-        bool setBaud(uint8_t newUART, bool permanent);
-        int getBaud();
+ bool setBaud(uint8_t newUART, bool permanent);
+ int getBaud();
 
-        bool setParity(uint8_t newParity, bool permanent);
-        String getParity();
+ bool setParity(uint8_t newParity, bool permanent);
+ String getParity();
 
-        bool setAirDataRate(uint8_t newAirData, bool permanent);
-        int getAirDataRate();
+ bool setAirDataRate(uint8_t newAirData, bool permanent);
+ int getAirDataRate();
 
-        bool setSubPacketSize(uint8_t newSize, bool permanent);
-        int getSubPacketSize();
+ bool setSubPacketSize(uint8_t newSize, bool permanent);
+ int getSubPacketSize();
 
-        bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
-        uint8_t getRSSIAmbient();
-        uint16_t readRSSIAmbient();
+ bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
+ uint8_t getRSSIAmbient();
 
-        bool setPower(uint8_t newPower, bool permanent);
-        int getPower();
+ bool setPower(uint8_t newPower, bool permanent);
+ int getPower();
 
-        bool setChannel(int newChannel, bool permanent);
-        int getChannel();
+ bool setChannel(int newChannel, bool permanent);
+ int getChannel();
 
-        bool setRSSIByteToggle(bool Setting, bool permanent);
-        bool getRSSIByteToggle();
+ bool setRSSIByteToggle(bool Setting, bool permanent);
+ bool getRSSIByteToggle();
 
-        bool setFixedTransmission(bool Setting, bool permanent);
-        bool getFixedTransmission();
+ bool setFixedTransmission(bool Setting, bool permanent);
+ bool getFixedTransmission();
 
-        bool setLBT(bool Setting, bool permanent);
-        bool getLBT();
+ bool setLBT(bool Setting, bool permanent);
+ bool getLBT();
 
-        bool setWORCycle(uint8_t WORSetting, bool permanent);
-        int getWORCycle();
+ bool setWORCycle(uint8_t WORSetting, bool permanent);
+ int getWORCycle();
 
-        bool setEncryptionKey(unsigned char key, bool permanent);
+ bool setEncryptionKey(unsigned char key, bool permanent);
 
-        void printBoardParameters();
+ void printBoardParameters();
 
-        bool setEscapeCharacter(char character);
-        uint8_t getEscapeCharacter();
+ bool setEscapeCharacter(char character);
+ uint8_t getEscapeCharacter();
 
-        bool sendTransparentData(String data);
-        bool sendTransparentData(uint8_t *data, int size);
+ bool sendTransparentData(String data);
+ bool sendTransparentData(uint8_t *data, int size);
 
-        bool sendFixedData(unsigned int address, int channel, String data, bool auxAvailable);
-        bool sendFixedData(unsigned int address, int channel, uint8_t *data, int size, bool auxAvailable);
+ bool sendFixedData(int address, int channel, String data, bool auxAvailable);
+ bool sendFixedData(int address, int channel, uint8_t *data, int size, bool auxAvailable);
 
-        String receiveData();
-        bool receiveData(uint8_t* data, int size);
+ String receiveData();
+ bool receiveData(uint8_t* data, int size);
 };
