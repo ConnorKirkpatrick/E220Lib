@@ -163,6 +163,9 @@ bool E220::readBoardData(){
  */
 bool E220::writeCommand(uint8_t cmdParam, uint8_t address, uint8_t length, uint8_t *parameters) {
     setMode(MODE_PROGRAM);
+    while(_streamSerial->available()){
+      _streamSerial->read(); //do this to clear the serial and thus prevent reading of incorrect data
+    }
     uint8_t message[3] = {cmdParam, address, length};
     _streamSerial->write(message, sizeof message);
     _streamSerial->write(parameters, length);
@@ -720,12 +723,10 @@ int E220::getWORCycle() {
  * @param permanent {bool} Set this as a non-volatile parameter
  * @return {bool} the success factor
  */
-bool E220::setEncryptionKey(unsigned char key, bool permanent) {
+bool E220::setEncryptionKey(unsigned int key, bool permanent) {
     //convert key to hex
-    uint16_t registerParams[] = {static_cast<uint16_t>(key)};
-    uint16_t combinedKey = key;
-    uint8_t keyH = ((combinedKey & 0xFFFF) >> 8);
-    uint8_t keyL = (combinedKey & 0xFF);
+    uint8_t keyH = highByte(key);
+    uint8_t keyL = lowByte(key);
     uint8_t keys[] = {keyH, keyL};
     if(permanent){
         if(!writeCommand(0xC0, 0x06, 0x02, keys)){

@@ -143,6 +143,7 @@ public:
 
  bool setRSSIAmbient(uint8_t ambientSetting, bool permanent);
  uint8_t getRSSIAmbient();
+ uint16_t readRSSIAmbient();
 
  bool setPower(uint8_t newPower, bool permanent);
  int getPower();
@@ -162,7 +163,7 @@ public:
  bool setWORCycle(uint8_t WORSetting, bool permanent);
  int getWORCycle();
 
- bool setEncryptionKey(unsigned char key, bool permanent);
+ bool setEncryptionKey(unsigned int key, bool permanent);
 
  void printBoardParameters();
 
