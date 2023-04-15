@@ -88,8 +88,9 @@ void E220::setMode(uint8_t mode){
     }
     delay(20);
     while(digitalRead(_AUX) == LOW){
-      delayMicroseconds(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
+      delay(1); //if the AUX pin is low this means the module is still processing the change
     }
+    delay(2); //delay as stated on data sheet, aux high must last for 2ms before mode change is complete
 }
 /**
  * setRadioMode, public option to set the operating mode of the module
@@ -109,6 +110,7 @@ bool E220::readBoardData(){
     byte configCommand[] = {0xC1, 0x00, 0x06};
     _streamSerial->write(configCommand, sizeof(configCommand));
     _streamSerial->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
+    _streamSerial->flush();
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
         Serial.println("Error reading module config, check the wiring");
