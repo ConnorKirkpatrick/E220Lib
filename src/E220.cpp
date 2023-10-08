@@ -1008,7 +1008,6 @@ bool E220::sendTransparentData(uint8_t *data, int size) {
     for(int i = 0; i < size; i++){
       _streamSerial->write(data[i]);
     }
-    _streamSerial->write(escapeCharacter);
     _streamSerial->flush();
     return true;
   }
@@ -1096,13 +1095,12 @@ bool E220::sendFixedData(unsigned int address, int channel, uint8_t *data, int s
       delay(10);
     }
   }
-  uint8_t message[size+4];
+  uint8_t message[size+3];
   message[0] = highByte(address);
   message[1] = lowByte(address);
   message[2] = (uint8_t) channel;
   memcpy(&message[3],data,size);
-  message[size+3] = escapeCharacter;
-  _streamSerial->write(message,size+4);
+  _streamSerial->write(message,size+3);
   _streamSerial->flush();
   return true;
 }
