@@ -1128,7 +1128,7 @@ String E220::receiveData() {
  */
 bool E220::receiveData(uint8_t *data, int size) {
   if(_streamSerial->available()){
-   _streamSerial->readBytesUntil(escapeCharacter,data,size);
+   _streamSerial->readBytes(data,size);
    return true;
   }
   else{
