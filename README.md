@@ -1,4 +1,4 @@
-# Arduino E220 Library 1.3.3
+# Arduino E220 Library 1.3.4
 
 Arduino library made to interface an EBYTE E220 type module.
 
