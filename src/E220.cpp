@@ -877,7 +877,7 @@ void E220::printBoardParameters() {
                 break;
         }
         Serial.print("RSSI Ambient Noise Toggle: ");
-        switch (_subPacketSize) {
+        switch (_RSSIAmbientNoise) {
             case 0b00:
                 Serial.println("Disabled");
                 break;
