@@ -53,11 +53,17 @@
 #define RAN_D 0b00          //disabled (default)
 #define RAN_E 0b01          //Enabled
 
-//Transmission Power
+//Transmission Power (E220-900T30D)
 #define Power_30 0b00       //30dBm (Default)
 #define Power_27 0b01       //27dBm
 #define Power_24 0b10       //24dBm
 #define Power_21 0b11       //21dBm
+
+//Transmission Power (E220-900T22D)
+#define Power_22 0b00       //22dBm (Default)
+#define Power_17 0b01       //17dBm
+#define Power_13 0b10       //13dBm
+#define Power_10 0b11       //10dBm
 
 //Register 4 reserved for the channel
 //16 bits of data for the channel
