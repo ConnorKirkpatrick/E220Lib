@@ -1,4 +1,4 @@
-# Arduino E220 Library 1.3.4
+# Arduino E220 Library 1.3.5
 
 Arduino library made to interface an EBYTE E220 type module.
 
@@ -77,7 +77,12 @@ SetPower(newPower) This option changes the broadcast power of the module. Higher
 Power_30 : 30dBm (Default)\
 Power_27 : 27dBm\
 Power_24 : 24dBm\
-Power_21 : 21dBm
+Power_21 : 21dBm\
+FOR E220 ONLY:\
+Power_22 : 22dBm (Default)\
+Power_17 : 17dBm\
+Power_13 : 13dBm\
+Power_10 : 10dBm
 
 setRSSIByteToggle(toggle) When enabled, the module will add an RSSI value to the end of any received data\
 RSSIB_D : Disabled (default)\
