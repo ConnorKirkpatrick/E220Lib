@@ -888,16 +888,16 @@ void E220::printBoardParameters() {
         Serial.print("Transmission Power: ");
         switch (_transmitPower) {
             case 0b00:
-                Serial.println("Power_30");
+                Serial.println("22dBm (22D) / 30dBm (30D)");
                 break;
             case 0b01:
-                Serial.println("Power_27");
+                Serial.println("17dBm (22D) / 27dBm (30D)");
                 break;
             case 0b10:
-                Serial.println("Power_24");
+                Serial.println("13dBm (22D) / 24dBm (30D)");
                 break;
             case 0b11:
-                Serial.println("Power_21");
+                Serial.println("10dBm (22D) / 21dBm (30D)");
                 break;
         }
         Serial.print("Channel: ");
