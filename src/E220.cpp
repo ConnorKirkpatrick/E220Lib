@@ -401,7 +401,7 @@ bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
 int E220::getSubPacketSize() {
     switch(_subPacketSize){
         case 0b00:
-            return 240;
+            return 200;
         case 0b01:
             return 128;
         case 0b10:
