@@ -313,6 +313,8 @@ String E220::getParity() {
             return "8E1";
         case 0b11:
             return "8N1";
+        default:
+            return "N/A";
     }
 }
 /**
@@ -363,6 +365,8 @@ int E220::getAirDataRate() {
             return 38400;
         case 0b111:
             return 62500;
+        default:
+            return -1;
 
 
     }
@@ -408,6 +412,8 @@ int E220::getSubPacketSize() {
             return 64;
         case 0b11:
             return 32;
+        default:
+            return -1;
     }
 }
 
@@ -516,6 +522,8 @@ int E220::getPower() {
             return 24;
         case 0b11:
             return 21;
+        default:
+            return -1;
 
     }
 }
@@ -714,6 +722,8 @@ int E220::getWORCycle() {
             return 3500;
         case 0b111:
             return 4000;
+        default:
+            return -1;
 
     }
 }
